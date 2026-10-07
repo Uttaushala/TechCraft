@@ -36,6 +36,16 @@ jobs:
           chmod +x gradlew
           ./gradlew setupCIWorkspace build --no-daemon
 
+      # The jar must contain only TechCraft: the Mekanism API is compiled against, and IC2 and JEI are compile-only.
+      - name: Check the jar contains no foreign classes
+        run: |
+          JAR=$(ls build/libs/techcraft-*.jar | grep -v -- -sources)
+          echo "$JAR"
+          unzip -l "$JAR" | awk '{print $4}' | grep -E '\.class$' | sed -E 's#/[^/]*$##' | sort | uniq -c
+          if unzip -l "$JAR" | awk '{print $4}' | grep -E '^(mekanism|ic2|mezz)/'; then
+            echo "Foreign classes found in the mod jar"; exit 1
+          fi
+
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
