@@ -6,9 +6,10 @@ import com.techcraft.tile.SideConfig;
 import com.techcraft.tile.TileAlloyFurnace;
 import com.techcraft.tile.TileBatteryBox;
 import com.techcraft.tile.TileCharger;
-import com.techcraft.tile.TileCoalGenerator;
+import com.techcraft.tile.TileFuelGenerator;
 import com.techcraft.tile.TileFluidBase;
 import com.techcraft.tile.TileFluidTank;
+import com.techcraft.tile.TileGridMachine;
 import com.techcraft.tile.TileMachineBase;
 import com.techcraft.tile.TileProcessor;
 import net.minecraft.client.gui.GuiButton;
@@ -227,7 +228,7 @@ public class GuiMachine extends GuiContainer {
         int progress = container.getField(TileMachineBase.FIELD_PROGRESS);
         int progressMax = container.getField(TileMachineBase.FIELD_PROGRESS_MAX);
 
-        if (tile instanceof TileCoalGenerator) {
+        if (tile instanceof TileFuelGenerator) {
             // Flame above the fuel slot, burning down.
             int fx = left + 81;
             int fy = top + 36;
@@ -289,6 +290,9 @@ public class GuiMachine extends GuiContainer {
             } else if (tile instanceof TileProcessor) {
                 x = 62;
                 y = 58;
+            } else if (tile instanceof TileGridMachine) {
+                x = 120;
+                y = 74;
             } else if (tile instanceof TileCharger) {
                 x = 104;
                 y = 40;

@@ -139,6 +139,14 @@ public final class SelfTest {
             this.origin = origin;
         }
 
+        WorldServer world() {
+            return world;
+        }
+
+        boolean isAir(int dx, int dy, int dz) {
+            return world.isAirBlock(at(dx, dy, dz));
+        }
+
         BlockPos at(int dx, int dy, int dz) {
             return origin.add(dx, dy, dz);
         }

@@ -215,6 +215,123 @@ for on in (False, True):
     save_block(front_lava(on), "lava_generator" + sfx)
     save_block(front_wind(on), "wind_turbine" + sfx)
 
+# ---- pump: a nozzle with a water drop ----
+def front_pump(on):
+    im = casing()
+    frame(im, 3, 3, 12, 12, BASE)
+    rect(im, 4, 4, 11, 11, (40, 44, 52, 255))
+    rect(im, 6, 4, 9, 7, (150, 155, 165, 255))
+    rect(im, 7, 8, 8, 9, (80, 150, 255, 255) if on else (50, 90, 150, 255))
+    im.putpixel((7, 10), (120, 190, 255, 255) if on else (60, 100, 160, 255))
+    im.putpixel((8, 11), (120, 190, 255, 255) if on else (60, 100, 160, 255))
+    return im
+
+
+# ---- geothermal: glowing vents ----
+def front_geothermal(on):
+    im = casing()
+    frame(im, 3, 3, 12, 12, BASE)
+    rect(im, 4, 4, 11, 11, (50, 30, 25, 255))
+    for x in range(5, 11, 2):
+        rect(im, x, 5, x, 10, (255, 150, 40, 255) if on else (140, 70, 30, 255))
+    if on:
+        for x in range(5, 11, 2):
+            im.putpixel((x, 5), (255, 235, 120, 255))
+    return im
+
+
+# ---- water wheel: paddles in a ring ----
+def front_wheel(on):
+    im = casing()
+    frame(im, 2, 2, 13, 13, BASE)
+    rect(im, 3, 3, 12, 12, (30, 70, 110, 255) if on else (40, 52, 70, 255))
+    paddle = (170, 130, 80, 255)
+    if on:
+        pts = [(8, 4), (8, 5), (11, 5), (10, 6), (12, 8), (11, 8), (11, 10), (10, 10), (8, 12), (8, 11), (5, 10), (6, 10), (4, 8), (5, 8), (5, 5), (6, 6)]
+    else:
+        pts = [(8, 4), (8, 5), (8, 6), (8, 10), (8, 11), (8, 12), (4, 8), (5, 8), (6, 8), (10, 8), (11, 8), (12, 8)]
+    for pt in pts:
+        im.putpixel(pt, paddle)
+    rect(im, 7, 7, 8, 8, (200, 200, 205, 255))
+    return im
+
+
+# ---- biomass: leaf behind a window ----
+def front_biomass(on):
+    im = casing()
+    frame(im, 3, 3, 12, 12, BASE)
+    rect(im, 4, 4, 11, 11, (30, 60, 35, 255) if not on else (50, 130, 55, 255))
+    leaf = (110, 220, 110, 255) if on else (60, 120, 65, 255)
+    for (x, y) in ((8, 5), (7, 6), (8, 6), (9, 6), (6, 7), (7, 7), (8, 7), (9, 7), (10, 7), (7, 8), (8, 8), (9, 8), (8, 9), (8, 10)):
+        im.putpixel((x, y), leaf)
+    return im
+
+
+# ---- miner: drill bit pointing down ----
+def front_miner(on):
+    im = casing()
+    frame(im, 3, 3, 12, 12, BASE)
+    rect(im, 4, 4, 11, 11, (40, 40, 44, 255))
+    bit = (225, 228, 235, 255) if on else (170, 172, 180, 255)
+    for y, (x0, x1) in enumerate(((6, 9), (6, 9), (7, 9), (7, 8), (7, 8), (8, 8)), start=4):
+        rect(im, x0, y, x1, y, bit)
+    for y in (5, 7, 9):
+        im.putpixel((9 if y % 2 else 6, y), (110, 112, 120, 255))
+    if on:
+        for p in ((5, 10), (10, 10), (6, 11), (9, 11)):
+            im.putpixel(p, (170, 130, 90, 255))
+    return im
+
+
+# ---- breaker: pickaxe ----
+def front_breaker(on):
+    im = casing()
+    frame(im, 3, 3, 12, 12, BASE)
+    rect(im, 4, 4, 11, 11, (40, 40, 44, 255))
+    head = (220, 224, 232, 255) if on else (165, 168, 176, 255)
+    for p in ((5, 5), (6, 4), (7, 4), (8, 4), (9, 4), (10, 5), (11, 6)):
+        im.putpixel(p, head)
+    for p in ((8, 5), (8, 6), (8, 7), (8, 8), (8, 9), (8, 10)):
+        im.putpixel(p, (150, 105, 60, 255))
+    return im
+
+
+# ---- placer: a block with an arrow ----
+def front_placer(on):
+    im = casing()
+    frame(im, 3, 3, 12, 12, BASE)
+    rect(im, 4, 4, 11, 11, (40, 40, 44, 255))
+    rect(im, 5, 5, 7, 7, (150, 105, 60, 255))
+    arrow = (240, 240, 245, 255) if on else (160, 160, 170, 255)
+    for p in ((8, 8), (9, 9), (10, 10), (10, 9), (10, 8), (9, 10), (8, 10)):
+        im.putpixel(p, arrow)
+    return im
+
+
+# ---- grinder: crossed blades ----
+def front_grinder(on):
+    im = casing()
+    frame(im, 3, 3, 12, 12, BASE)
+    rect(im, 4, 4, 11, 11, (45, 30, 30, 255))
+    blade = (235, 238, 245, 255) if on else (170, 172, 180, 255)
+    for i in range(6):
+        im.putpixel((5 + i, 5 + i), blade)
+        im.putpixel((10 - i, 5 + i), blade)
+    rect(im, 7, 7, 8, 8, (220, 50, 40, 255) if on else (130, 40, 35, 255))
+    return im
+
+
+for on in (False, True):
+    sfx = "_front_on" if on else "_front"
+    save_block(front_pump(on), "pump" + sfx)
+    save_block(front_geothermal(on), "geothermal_generator" + sfx)
+    save_block(front_wheel(on), "water_wheel" + sfx)
+    save_block(front_biomass(on), "biomass_generator" + sfx)
+    save_block(front_miner(on), "auto_miner" + sfx)
+    save_block(front_breaker(on), "block_breaker" + sfx)
+    save_block(front_placer(on), "block_placer" + sfx)
+    save_block(front_grinder(on), "mob_grinder" + sfx)
+
 # ---- fluid tank: glass gauge ----
 tank_side = casing((130, 140, 150))
 for y in range(3, 13):

@@ -49,6 +49,7 @@ public abstract class TileMachineBase extends TileEntity implements ITickable {
     protected final ItemStackHandler upgrades;
     protected final SideConfig sides = new SideConfig();
     private int activeTicks;
+    private boolean bypassValidation;
     /** FE per tick produced or used right now, shown in the GUI. */
     protected int rate;
 
@@ -62,7 +63,7 @@ public abstract class TileMachineBase extends TileEntity implements ITickable {
 
             @Override
             public boolean isItemValid(int slot, ItemStack stack) {
-                return isItemValidForSlot(slot, stack);
+                return bypassValidation || isItemValidForSlot(slot, stack);
             }
         };
         this.upgrades = new ItemStackHandler(getUpgradeSlotCount()) {
@@ -287,6 +288,19 @@ public abstract class TileMachineBase extends TileEntity implements ITickable {
                 }
             }
         }
+    }
+
+    /** Inserts into any slot of the machine's own inventory, ignoring what the slots accept from outside. */
+    protected ItemStack insertInternal(ItemStack stack) {
+        bypassValidation = true;
+        try {
+            for (int slot = 0; slot < inventory.getSlots() && !stack.isEmpty(); slot++) {
+                stack = inventory.insertItem(slot, stack, false);
+            }
+        } finally {
+            bypassValidation = false;
+        }
+        return stack;
     }
 
     public IEnergyStorage getEnergy() {

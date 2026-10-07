@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "techcraft:blocks/machine_top",
+    "front": "techcraft:blocks/mob_grinder_front_on",
+    "side": "techcraft:blocks/machine_side"
+  }
+}

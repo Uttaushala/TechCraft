@@ -2,6 +2,10 @@ package com.techcraft.init;
 
 import com.techcraft.TechCraft;
 import com.techcraft.tile.TileAlloyFurnace;
+import com.techcraft.tile.TileAutoMiner;
+import com.techcraft.tile.TileBiomassGenerator;
+import com.techcraft.tile.TileBlockBreaker;
+import com.techcraft.tile.TileBlockPlacer;
 import com.techcraft.tile.TileBatteryBox;
 import com.techcraft.tile.TileCharger;
 import com.techcraft.tile.TileCoalGenerator;
@@ -9,8 +13,12 @@ import com.techcraft.tile.TileCompressor;
 import com.techcraft.tile.TileCrusher;
 import com.techcraft.tile.TileElectricFurnace;
 import com.techcraft.tile.TileFluidTank;
+import com.techcraft.tile.TileGeothermalGenerator;
 import com.techcraft.tile.TileLavaGenerator;
+import com.techcraft.tile.TileMobGrinder;
+import com.techcraft.tile.TilePump;
 import com.techcraft.tile.TileSolarPanel;
+import com.techcraft.tile.TileWaterWheel;
 import com.techcraft.tile.TileWindTurbine;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -41,6 +49,14 @@ public final class RegistryHandler {
         GameRegistry.registerTileEntity(TileSolarPanel.Basic.class, new ResourceLocation(TechCraft.MODID, "solar_panel"));
         GameRegistry.registerTileEntity(TileSolarPanel.Advanced.class, new ResourceLocation(TechCraft.MODID, "solar_panel_advanced"));
         GameRegistry.registerTileEntity(TileSolarPanel.Ultimate.class, new ResourceLocation(TechCraft.MODID, "solar_panel_ultimate"));
+        GameRegistry.registerTileEntity(TilePump.class, new ResourceLocation(TechCraft.MODID, "pump"));
+        GameRegistry.registerTileEntity(TileGeothermalGenerator.class, new ResourceLocation(TechCraft.MODID, "geothermal_generator"));
+        GameRegistry.registerTileEntity(TileWaterWheel.class, new ResourceLocation(TechCraft.MODID, "water_wheel"));
+        GameRegistry.registerTileEntity(TileBiomassGenerator.class, new ResourceLocation(TechCraft.MODID, "biomass_generator"));
+        GameRegistry.registerTileEntity(TileAutoMiner.class, new ResourceLocation(TechCraft.MODID, "auto_miner"));
+        GameRegistry.registerTileEntity(TileBlockBreaker.class, new ResourceLocation(TechCraft.MODID, "block_breaker"));
+        GameRegistry.registerTileEntity(TileBlockPlacer.class, new ResourceLocation(TechCraft.MODID, "block_placer"));
+        GameRegistry.registerTileEntity(TileMobGrinder.class, new ResourceLocation(TechCraft.MODID, "mob_grinder"));
     }
 
     @SubscribeEvent

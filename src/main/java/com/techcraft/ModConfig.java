@@ -47,25 +47,59 @@ public class ModConfig {
     @Config.Comment("Fluid Tank settings")
     public static FluidTankSettings fluidTank = new FluidTankSettings();
 
+    @Config.Comment("Biomass Generator settings (burns crops, seeds, saplings, leaves and plant food)")
+    public static Generator biomass = new Generator(25, 40000, 200);
+
+    @Config.Comment("Geothermal Generator settings")
+    public static Geothermal geothermal = new Geothermal();
+
+    @Config.Comment("Water Wheel settings")
+    public static WaterWheel waterWheel = new WaterWheel();
+
+    @Config.Comment("Pump settings")
+    public static Pump pump = new Pump();
+
+    @Config.Comment("Auto Miner settings")
+    public static Miner miner = new Miner();
+
+    @Config.Comment("Block Breaker settings")
+    public static Breaker blockBreaker = new Breaker();
+
+    @Config.Comment("Block Placer settings")
+    public static Placer blockPlacer = new Placer();
+
+    @Config.Comment("Mob Grinder settings")
+    public static Grinder mobGrinder = new Grinder();
+
     @Config.Comment("Batteries and electric tools")
     public static Equipment equipment = new Equipment();
 
     public static class Generator {
         @Config.Comment("FE produced per tick while burning")
         @Config.RangeInt(min = 1, max = 100000)
-        public int energyPerTick = 40;
+        public int energyPerTick;
 
         @Config.Comment("Internal energy buffer (FE)")
         @Config.RangeInt(min = 1000, max = 100000000)
-        public int capacity = 50000;
+        public int capacity;
 
         @Config.Comment("Max FE pushed to neighbours per tick")
         @Config.RangeInt(min = 1, max = 1000000)
-        public int maxOutput = 200;
+        public int maxOutput;
 
         @Config.Comment("Burn time multiplier relative to the vanilla furnace")
         @Config.RangeDouble(min = 0.1, max = 10)
         public double burnTimeMultiplier = 1.0;
+
+        public Generator() {
+            this(40, 50000, 200);
+        }
+
+        public Generator(int energyPerTick, int capacity, int maxOutput) {
+            this.energyPerTick = energyPerTick;
+            this.capacity = capacity;
+            this.maxOutput = maxOutput;
+        }
     }
 
     public static class Processor {
@@ -159,6 +193,98 @@ public class ModConfig {
         @Config.Comment("Storage (mB)")
         @Config.RangeInt(min = 1000, max = 100000000)
         public int capacity = 64000;
+    }
+
+    public static class Geothermal {
+        @Config.Comment("FE/t for every lava block touching the generator (not on top)")
+        @Config.RangeInt(min = 1, max = 100000)
+        public int perLava = 20;
+    }
+
+    public static class WaterWheel {
+        @Config.Comment("FE/t for every flowing water block on a side of the wheel")
+        @Config.RangeInt(min = 1, max = 100000)
+        public int perWater = 10;
+    }
+
+    public static class Pump {
+        @Config.RangeInt(min = 1, max = 100000)
+        public int energyPerTick = 40;
+
+        @Config.Comment("Ticks to pump one bucket")
+        @Config.RangeInt(min = 1, max = 10000)
+        public int ticksPerBucket = 20;
+
+        @Config.Comment("Pumping water doesn't use up the source block")
+        public boolean infiniteWater = true;
+
+        @Config.Comment("How far below the pump it looks for liquid")
+        @Config.RangeInt(min = 1, max = 128)
+        public int range = 48;
+
+        @Config.RangeInt(min = 1000, max = 100000000)
+        public int capacity = 20000;
+
+        @Config.Comment("Storage (mB)")
+        @Config.RangeInt(min = 1000, max = 1000000)
+        public int tankCapacity = 16000;
+    }
+
+    public static class Miner {
+        @Config.Comment("Mines a square of (2 * radius + 1) blocks below itself, layer by layer")
+        @Config.RangeInt(min = 1, max = 16)
+        public int radius = 4;
+
+        @Config.RangeInt(min = 1, max = 100000)
+        public int energyPerBlock = 250;
+
+        @Config.RangeInt(min = 1, max = 1000)
+        public int ticksPerBlock = 10;
+
+        @Config.RangeInt(min = 1000, max = 100000000)
+        public int capacity = 100000;
+
+        @Config.Comment("Also break blocks that hold items (chests, machines). They lose their contents.")
+        public boolean mineTileEntities = false;
+    }
+
+    public static class Breaker {
+        @Config.RangeInt(min = 1, max = 100000)
+        public int energyPerBlock = 150;
+
+        @Config.RangeInt(min = 1, max = 1000)
+        public int ticksPerBlock = 10;
+
+        @Config.RangeInt(min = 1000, max = 100000000)
+        public int capacity = 50000;
+
+        @Config.Comment("Also break blocks that hold items (chests, machines). They lose their contents.")
+        public boolean mineTileEntities = false;
+    }
+
+    public static class Placer {
+        @Config.RangeInt(min = 1, max = 100000)
+        public int energyPerBlock = 50;
+
+        @Config.RangeInt(min = 1, max = 1000)
+        public int ticksPerBlock = 10;
+
+        @Config.RangeInt(min = 1000, max = 100000000)
+        public int capacity = 20000;
+    }
+
+    public static class Grinder {
+        @Config.RangeInt(min = 1, max = 100000)
+        public int energyPerHit = 200;
+
+        @Config.RangeInt(min = 1, max = 1000)
+        public int damage = 6;
+
+        @Config.RangeInt(min = 1, max = 1000)
+        public int ticksPerHit = 20;
+
+        @Config.RangeInt(min = 1000, max = 100000000)
+        public int capacity = 50000;
     }
 
     public static class Equipment {

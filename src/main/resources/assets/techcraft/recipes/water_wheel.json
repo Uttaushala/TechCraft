@@ -1,0 +1,28 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "PSP",
+    "SMS",
+    "PCP"
+  ],
+  "key": {
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
+    },
+    "M": {
+      "item": "techcraft:machine_frame"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    }
+  },
+  "result": {
+    "item": "techcraft:water_wheel",
+    "count": 1
+  }
+}

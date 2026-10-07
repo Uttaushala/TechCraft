@@ -9,6 +9,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -28,7 +29,7 @@ final class Tests {
             for (String name : Arrays.asList("circuit", "machine_frame", "coal_generator", "electric_furnace", "crusher",
                     "battery_box", "compressor", "alloy_furnace", "charger", "lava_generator", "fluid_tank", "wind_turbine",
                     "solar_panel", "solar_panel_advanced", "solar_panel_ultimate", "battery_box_advanced",
-                    "battery_box_ultimate", "upgrade_speed", "upgrade_efficiency", "battery_basic", "battery_advanced", "battery_ultimate", "electric_drill",
+                    "battery_box_ultimate", "pump", "geothermal_generator", "water_wheel", "biomass_generator", "auto_miner", "block_breaker", "block_placer", "mob_grinder", "upgrade_speed", "upgrade_efficiency", "battery_basic", "battery_advanced", "battery_ultimate", "electric_drill",
                     "chainsaw", "tech_wrench", "energy_meter")) {
                 SelfTest.recipeExists(missing, name);
             }
@@ -185,6 +186,86 @@ final class Tests {
             int plain = c.energy(0, 0, 0).getEnergyStored();
             int efficient = c.energy(0, 0, 2).getEnergyStored();
             return efficient > plain ? null : "plain crusher has " + plain + " FE left, efficient one " + efficient;
+        }));
+
+        // Pump: draws water from the block below and pushes it into the tank next to it.
+        tests.add(new SelfTest.Test("pump-fills-neighbour-tank", c -> {
+            c.machine(ModBlocks.PUMP, EnumFacing.NORTH, 0, 0, 0);
+            c.machine(ModBlocks.FLUID_TANK, EnumFacing.NORTH, 1, 0, 0);
+            c.place(Blocks.WATER, 0, -1, 0);
+            c.energy(0, 0, 0).receiveEnergy(100000, false);
+        }, c -> {
+            FluidStack content = c.fluids(1, 0, 0).getTankProperties()[0].getContents();
+            return content != null && content.getFluid() == FluidRegistry.WATER && content.amount >= 1000 ? null : "tank holds " + content;
+        }));
+
+        tests.add(new SelfTest.Test("geothermal-generator", c -> {
+            c.machine(ModBlocks.GEOTHERMAL_GENERATOR, EnumFacing.NORTH, 0, 0, 0);
+            c.place(Blocks.LAVA, 0, -1, 0);
+        }, c -> c.expectEnergyAbove(c.energy(0, 0, 0), 0)));
+
+        tests.add(new SelfTest.Test("water-wheel", c -> {
+            c.machine(ModBlocks.WATER_WHEEL, EnumFacing.NORTH, 0, 0, 0);
+            c.place(Blocks.WATER, 1, 3, 0);
+        }, c -> c.expectEnergyAbove(c.energy(0, 0, 0), 0)));
+
+        tests.add(new SelfTest.Test("biomass-generator", c -> {
+            c.machine(ModBlocks.BIOMASS_GENERATOR, EnumFacing.NORTH, 0, 0, 0);
+            c.items(0, 0, 0).setStackInSlot(0, new ItemStack(Items.WHEAT, 4));
+        }, c -> c.expectEnergyAbove(c.energy(0, 0, 0), 0)));
+
+        tests.add(new SelfTest.Test("biomass-rejects-meat", c -> c.machine(ModBlocks.BIOMASS_GENERATOR, EnumFacing.NORTH, 0, 0, 0), c -> {
+            net.minecraftforge.items.IItemHandler inv = c.items(0, 0, 0);
+            boolean meat = inv.insertItem(0, new ItemStack(Items.BEEF, 1), true).isEmpty();
+            boolean wheat = inv.insertItem(0, new ItemStack(Items.WHEAT, 1), true).isEmpty();
+            return !meat && wheat ? null : "meat accepted: " + meat + ", wheat accepted: " + wheat;
+        }));
+
+        // The miner digs the stone platform under it and stores the cobblestone.
+        tests.add(new SelfTest.Test("auto-miner", c -> {
+            c.machine(ModBlocks.AUTO_MINER, EnumFacing.NORTH, 2, 0, 0);
+            c.energy(2, 0, 0).receiveEnergy(100000, false);
+        }, c -> {
+            net.minecraftforge.items.IItemHandler inv = c.items(2, 0, 0);
+            int total = 0;
+            for (int i = 0; i < inv.getSlots(); i++) {
+                total += inv.getStackInSlot(i).getCount();
+            }
+            return total > 0 ? null : "miner collected nothing";
+        }));
+
+        tests.add(new SelfTest.Test("block-breaker", c -> {
+            c.machine(ModBlocks.BLOCK_BREAKER, EnumFacing.EAST, 0, 0, 0);
+            c.place(Blocks.COBBLESTONE, 1, 0, 0);
+            c.energy(0, 0, 0).receiveEnergy(50000, false);
+        }, c -> {
+            if (!c.isAir(1, 0, 0)) {
+                return "block in front was not broken";
+            }
+            return c.expectItem(c.items(0, 0, 0), 0, net.minecraft.item.Item.getItemFromBlock(Blocks.COBBLESTONE), 1);
+        }));
+
+        tests.add(new SelfTest.Test("block-placer", c -> {
+            c.machine(ModBlocks.BLOCK_PLACER, EnumFacing.EAST, 0, 0, 0);
+            c.energy(0, 0, 0).receiveEnergy(20000, false);
+            c.items(0, 0, 0).setStackInSlot(0, new ItemStack(Blocks.COBBLESTONE, 3));
+        }, c -> c.isAir(1, 0, 0) ? "nothing was placed in front" : null));
+
+        tests.add(new SelfTest.Test("mob-grinder", c -> {
+            c.machine(ModBlocks.MOB_GRINDER, EnumFacing.EAST, 0, 0, 0);
+            c.energy(0, 0, 0).receiveEnergy(50000, false);
+            net.minecraft.entity.passive.EntityCow cow = new net.minecraft.entity.passive.EntityCow(c.world());
+            BlockPos at = c.at(3, 0, 0);
+            cow.setPosition(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+            c.world().spawnEntity(cow);
+        }, c -> {
+            net.minecraftforge.items.IItemHandler inv = c.items(0, 0, 0);
+            for (int i = 0; i < inv.getSlots(); i++) {
+                if (!inv.getStackInSlot(i).isEmpty()) {
+                    return null;
+                }
+            }
+            return "grinder collected no drops";
         }));
 
         tests.add(new SelfTest.Test("electric-drill-needs-energy", c -> { }, c -> {
