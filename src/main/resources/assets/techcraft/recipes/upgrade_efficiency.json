@@ -1,0 +1,28 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "PLP",
+    "CFC",
+    "PLP"
+  ],
+  "key": {
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "L": {
+      "item": "minecraft:dye",
+      "data": 4
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "F": {
+      "item": "techcraft:machine_frame"
+    }
+  },
+  "result": {
+    "item": "techcraft:upgrade_efficiency",
+    "count": 1
+  }
+}

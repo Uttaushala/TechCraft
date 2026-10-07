@@ -17,6 +17,8 @@ public class TileAlloyFurnace extends TileMachineBase {
     public static final int SLOT_B = 1;
     public static final int SLOT_OUTPUT = 2;
 
+    private static final int SCALE = 4;
+
     private int progress;
 
     public TileAlloyFurnace() {
@@ -29,11 +31,12 @@ public class TileAlloyFurnace extends TileMachineBase {
         AlloyRecipes.Match match = AlloyRecipes.find(inventory.getStackInSlot(SLOT_A), inventory.getStackInSlot(SLOT_B));
 
         boolean working = false;
+        int cost = Math.max(1, (int) Math.round(config.energyPerTick * energyFactor()));
         if (match != null && canOutput(match.recipe.output)) {
-            if (energy.consume(config.energyPerTick)) {
+            if (energy.consume(cost)) {
                 working = true;
-                progress++;
-                if (progress >= config.ticksPerOperation) {
+                progress += (int) Math.round(SCALE * speedFactor());
+                if (progress >= config.ticksPerOperation * SCALE) {
                     progress = 0;
                     inventory.extractItem(match.slotA, match.recipe.countA, false);
                     inventory.extractItem(match.slotB, match.recipe.countB, false);
@@ -50,7 +53,7 @@ public class TileAlloyFurnace extends TileMachineBase {
             progress = 0;
             markDirty();
         }
-        rate = working ? config.energyPerTick : 0;
+        rate = working ? cost : 0;
         updateActive(working);
     }
 
@@ -82,6 +85,11 @@ public class TileAlloyFurnace extends TileMachineBase {
     }
 
     @Override
+    public int getUpgradeSlotCount() {
+        return 2;
+    }
+
+    @Override
     public int getRateSign() {
         return -1;
     }
@@ -93,7 +101,7 @@ public class TileAlloyFurnace extends TileMachineBase {
 
     @Override
     protected int getProgressMax() {
-        return ModConfig.alloyFurnace.ticksPerOperation;
+        return ModConfig.alloyFurnace.ticksPerOperation * SCALE;
     }
 
     @Override

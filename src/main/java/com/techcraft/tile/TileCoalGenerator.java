@@ -6,11 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.SlotItemHandler;
-import com.techcraft.energy.SidedEnergyWrapper;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -49,7 +46,7 @@ public class TileCoalGenerator extends TileMachineBase {
         rate = burning ? ModConfig.generator.energyPerTick : 0;
         updateActive(burning);
 
-        pushEnergy(ModConfig.generator.maxOutput, EnumFacing.VALUES);
+        pushEnergy(ModConfig.generator.maxOutput);
     }
 
     @Override
@@ -58,8 +55,13 @@ public class TileCoalGenerator extends TileMachineBase {
     }
 
     @Override
-    protected IEnergyStorage getEnergyCapability(@Nullable EnumFacing side) {
-        return new SidedEnergyWrapper(energy, false, true);
+    protected boolean defaultEnergyInput(EnumFacing side) {
+        return false;
+    }
+
+    @Override
+    protected boolean defaultEnergyOutput(EnumFacing side) {
+        return true;
     }
 
     @Override

@@ -1,19 +1,13 @@
 package com.techcraft.tile;
 
-import com.techcraft.energy.SidedEnergyWrapper;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.energy.IEnergyStorage;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
 /** A generator without inventory that produces a computed amount of energy every tick. */
 public abstract class TileSimpleGenerator extends TileMachineBase {
-    private static final EnumFacing[] OUTPUT_SIDES = {
-            EnumFacing.DOWN, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.EAST};
-
     private final int maxOutput;
 
     protected TileSimpleGenerator(int capacity, int maxOutput) {
@@ -31,12 +25,17 @@ public abstract class TileSimpleGenerator extends TileMachineBase {
         }
         rate = output;
         updateActive(output > 0);
-        pushEnergy(maxOutput, OUTPUT_SIDES);
+        pushEnergy(maxOutput);
     }
 
     @Override
-    protected IEnergyStorage getEnergyCapability(@Nullable EnumFacing side) {
-        return new SidedEnergyWrapper(energy, false, true);
+    protected boolean defaultEnergyInput(EnumFacing side) {
+        return false;
+    }
+
+    @Override
+    protected boolean defaultEnergyOutput(EnumFacing side) {
+        return true;
     }
 
     @Override

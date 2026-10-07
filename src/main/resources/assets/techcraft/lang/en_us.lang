@@ -33,12 +33,26 @@ item.techcraft.battery_advanced.name=Advanced Battery
 item.techcraft.battery_ultimate.name=Ultimate Battery
 item.techcraft.electric_drill.name=Electric Drill
 item.techcraft.chainsaw.name=Chainsaw
+item.techcraft.upgrade_speed.name=Speed Upgrade
+item.techcraft.upgrade_efficiency.name=Efficiency Upgrade
 item.techcraft.tech_wrench.name=Tech Wrench
 item.techcraft.energy_meter.name=Energy Meter
 
 gui.techcraft.stored=Stored energy:
 gui.techcraft.output_front=Outputs through the front
 gui.techcraft.empty=Empty
+
+gui.techcraft.sides=Sides
+gui.techcraft.side.front=Front
+gui.techcraft.side.back=Back
+gui.techcraft.side.left=Left
+gui.techcraft.side.right=Right
+gui.techcraft.side.top=Top
+gui.techcraft.side.bottom=Bottom
+gui.techcraft.mode.default=Def
+gui.techcraft.mode.in=In
+gui.techcraft.mode.out=Out
+gui.techcraft.mode.off=Off
 
 tooltip.techcraft.energy=Energy: %s / %s FE
 

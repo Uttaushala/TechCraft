@@ -15,6 +15,9 @@ public abstract class TileProcessor extends TileMachineBase {
     public static final int SLOT_INPUT = 0;
     public static final int SLOT_OUTPUT = 1;
 
+    /** Progress is counted in quarter ticks so speed upgrades can add fractions of a tick. */
+    private static final int SCALE = 4;
+
     private final ModConfig.Processor config;
     private int progress;
 
@@ -32,11 +35,12 @@ public abstract class TileProcessor extends TileMachineBase {
         ItemStack result = input.isEmpty() ? ItemStack.EMPTY : getResult(input);
 
         boolean working = false;
+        int cost = Math.max(1, (int) Math.round(config.energyPerTick * energyFactor()));
         if (!result.isEmpty() && canOutput(result)) {
-            if (energy.consume(config.energyPerTick)) {
+            if (energy.consume(cost)) {
                 working = true;
-                progress++;
-                if (progress >= config.ticksPerOperation) {
+                progress += (int) Math.round(SCALE * speedFactor());
+                if (progress >= config.ticksPerOperation * SCALE) {
                     progress = 0;
                     inventory.extractItem(SLOT_INPUT, 1, false);
                     ItemStack output = inventory.getStackInSlot(SLOT_OUTPUT);
@@ -52,7 +56,7 @@ public abstract class TileProcessor extends TileMachineBase {
             progress = 0;
             markDirty();
         }
-        rate = working ? config.energyPerTick : 0;
+        rate = working ? cost : 0;
         updateActive(working);
     }
 
@@ -83,6 +87,11 @@ public abstract class TileProcessor extends TileMachineBase {
     }
 
     @Override
+    public int getUpgradeSlotCount() {
+        return 2;
+    }
+
+    @Override
     public int getRateSign() {
         return -1;
     }
@@ -94,7 +103,7 @@ public abstract class TileProcessor extends TileMachineBase {
 
     @Override
     protected int getProgressMax() {
-        return config.ticksPerOperation;
+        return config.ticksPerOperation * SCALE;
     }
 
     @Override

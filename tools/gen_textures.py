@@ -376,4 +376,15 @@ for y in range(4, 8):
 rect(meter, 5, 10, 6, 11, (220, 50, 40, 255))
 rect(meter, 9, 10, 10, 11, (60, 110, 230, 255))
 save_item(meter, "energy_meter")
+# ---- upgrades: a small chip with a coloured stripe ----
+for name, col in (("speed", (255, 170, 40)), ("efficiency", (60, 220, 110))):
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    frame(im, 3, 3, 12, 12, (50, 54, 62))
+    rect(im, 4, 4, 11, 11, (40, 44, 52, 255))
+    rect(im, 5, 6, 10, 9, col + (255,))
+    rect(im, 5, 6, 10, 6, shade(col, 60))
+    for x in (4, 6, 8, 10):
+        im.putpixel((x, 2), (200, 200, 205, 255))
+        im.putpixel((x, 13), (200, 200, 205, 255))
+    save_item(im, f"upgrade_{name}")
 print("textures ok")

@@ -84,11 +84,13 @@ public class BlockMachine extends Block implements ITileEntityProvider {
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof TileMachineBase) {
-            IItemHandler inventory = ((TileMachineBase) tile).getInventory();
-            for (int i = 0; i < inventory.getSlots(); i++) {
-                ItemStack stack = inventory.getStackInSlot(i);
-                if (!stack.isEmpty()) {
-                    InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack.copy());
+            TileMachineBase machine = (TileMachineBase) tile;
+            for (IItemHandler inventory : new IItemHandler[]{machine.getInventory(), machine.getUpgradeInventory()}) {
+                for (int i = 0; i < inventory.getSlots(); i++) {
+                    ItemStack stack = inventory.getStackInSlot(i);
+                    if (!stack.isEmpty()) {
+                        InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack.copy());
+                    }
                 }
             }
         }

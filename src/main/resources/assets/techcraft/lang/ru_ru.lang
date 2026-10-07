@@ -33,12 +33,26 @@ item.techcraft.battery_advanced.name=Улучшенная батарея
 item.techcraft.battery_ultimate.name=Совершенная батарея
 item.techcraft.electric_drill.name=Электродрель
 item.techcraft.chainsaw.name=Электропила
+item.techcraft.upgrade_speed.name=Улучшение скорости
+item.techcraft.upgrade_efficiency.name=Улучшение экономии
 item.techcraft.tech_wrench.name=Технический ключ
 item.techcraft.energy_meter.name=Измеритель энергии
 
 gui.techcraft.stored=Запасено энергии:
 gui.techcraft.output_front=Отдаёт энергию лицевой стороной
 gui.techcraft.empty=Пусто
+
+gui.techcraft.sides=Стороны
+gui.techcraft.side.front=Спереди
+gui.techcraft.side.back=Сзади
+gui.techcraft.side.left=Слева
+gui.techcraft.side.right=Справа
+gui.techcraft.side.top=Сверху
+gui.techcraft.side.bottom=Снизу
+gui.techcraft.mode.default=Авто
+gui.techcraft.mode.in=Вх
+gui.techcraft.mode.out=Вых
+gui.techcraft.mode.off=Выкл
 
 tooltip.techcraft.energy=Энергия: %s / %s FE
 

@@ -49,7 +49,7 @@ for name, (side, top, front, front_on) in machines.items():
 
 plates = ["iron", "gold", "copper", "tin", "lead", "silver", "bronze", "steel"]
 generated = ["iron_dust", "gold_dust", "circuit", "machine_frame"] + [f"plate_{p}" for p in plates] + \
-            ["battery_basic", "battery_advanced", "battery_ultimate"]
+            ["battery_basic", "battery_advanced", "battery_ultimate", "upgrade_speed", "upgrade_efficiency"]
 handheld = ["electric_drill", "chainsaw", "tech_wrench", "energy_meter"]
 for item in generated:
     w(f"models/item/{item}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"techcraft:items/{item}"}})
@@ -96,6 +96,8 @@ recipes = {
     "battery_ultimate": (["DCD", "BBB", "DRD"], {"D": DIAMOND, "C": CIRCUIT, "B": T("battery_advanced"), "R": ore("blockRedstone")}, "battery_ultimate", 1),
     "electric_drill": (["PDP", "ICI", " B "], {"P": P_IRON, "D": DIAMOND, "I": IRON, "C": CIRCUIT, "B": T("battery_advanced")}, "electric_drill", 1),
     "chainsaw": (["PPD", "CMB", " I "], {"P": P_IRON, "D": DIAMOND, "C": CIRCUIT, "M": FRAME, "B": T("battery_advanced"), "I": IRON}, "chainsaw", 1),
+    "upgrade_speed": (["GRG", "CFC", "GRG"], {"G": P_GOLD, "R": REDSTONE, "C": CIRCUIT, "F": FRAME}, "upgrade_speed", 1),
+    "upgrade_efficiency": (["PLP", "CFC", "PLP"], {"P": P_IRON, "L": item("minecraft:dye", 4), "C": CIRCUIT, "F": FRAME}, "upgrade_efficiency", 1),
     "tech_wrench": (["I I", "IMI", " I "], {"I": IRON, "M": FRAME}, "tech_wrench", 1),
     "energy_meter": (["R R", "ICI", " I "], {"R": REDSTONE, "I": IRON, "C": CIRCUIT}, "energy_meter", 1),
 }

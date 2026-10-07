@@ -1,6 +1,9 @@
 package com.techcraft.dev;
 
 import com.techcraft.init.ModBlocks;
+import com.techcraft.tile.FaceMode;
+import com.techcraft.tile.SideConfig;
+import com.techcraft.tile.TileMachineBase;
 import com.techcraft.init.ModItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -25,7 +28,7 @@ final class Tests {
             for (String name : Arrays.asList("circuit", "machine_frame", "coal_generator", "electric_furnace", "crusher",
                     "battery_box", "compressor", "alloy_furnace", "charger", "lava_generator", "fluid_tank", "wind_turbine",
                     "solar_panel", "solar_panel_advanced", "solar_panel_ultimate", "battery_box_advanced",
-                    "battery_box_ultimate", "battery_basic", "battery_advanced", "battery_ultimate", "electric_drill",
+                    "battery_box_ultimate", "upgrade_speed", "upgrade_efficiency", "battery_basic", "battery_advanced", "battery_ultimate", "electric_drill",
                     "chainsaw", "tech_wrench", "energy_meter")) {
                 SelfTest.recipeExists(missing, name);
             }
@@ -111,6 +114,78 @@ final class Tests {
             c.machine(ModBlocks.CRUSHER, EnumFacing.NORTH, 1, 0, 0);
             c.energy(0, 0, 0).receiveEnergy(1000, false);
         }, c -> c.expectEnergyAbove(c.energy(1, 0, 0), 0)));
+
+        // Side configuration: disabled faces expose no capability, input-only faces can't be drained.
+        tests.add(new SelfTest.Test("side-config-energy", c -> {
+            c.machine(ModBlocks.BATTERY_BOX, EnumFacing.NORTH, 0, 0, 0);
+            TileMachineBase battery = (TileMachineBase) c.tile(0, 0, 0);
+            battery.getSideConfig().set(SideConfig.ENERGY, EnumFacing.EAST, FaceMode.DISABLED);
+            battery.getSideConfig().set(SideConfig.ENERGY, EnumFacing.WEST, FaceMode.OUTPUT);
+        }, c -> {
+            TileMachineBase battery = (TileMachineBase) c.tile(0, 0, 0);
+            if (battery.hasCapability(CapabilityEnergy.ENERGY, EnumFacing.EAST)) {
+                return "disabled face still has the energy capability";
+            }
+            IEnergyStorage west = battery.getCapability(CapabilityEnergy.ENERGY, EnumFacing.WEST);
+            if (west == null || !west.canExtract() || west.canReceive()) {
+                return "output face should only extract";
+            }
+            IEnergyStorage front = battery.getCapability(CapabilityEnergy.ENERGY, EnumFacing.NORTH);
+            if (front == null || !front.canExtract() || front.canReceive()) {
+                return "default front should only extract";
+            }
+            IEnergyStorage back = battery.getCapability(CapabilityEnergy.ENERGY, EnumFacing.SOUTH);
+            return back != null && back.canReceive() && !back.canExtract() ? null : "default back should only receive";
+        }));
+
+        // A crusher face set to OUTPUT pushes finished items into a chest by itself.
+        tests.add(new SelfTest.Test("item-eject-into-chest", c -> {
+            c.machine(ModBlocks.CRUSHER, EnumFacing.NORTH, 0, 0, 0);
+            c.place(Blocks.CHEST, 1, 0, 0);
+            ((TileMachineBase) c.tile(0, 0, 0)).getSideConfig().set(SideConfig.ITEMS, EnumFacing.EAST, FaceMode.OUTPUT);
+            c.items(0, 0, 0).setStackInSlot(1, new ItemStack(Blocks.GRAVEL, 5));
+        }, c -> {
+            net.minecraftforge.items.IItemHandler chest = c.tile(1, 0, 0).getCapability(
+                    net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.WEST);
+            int total = 0;
+            for (int i = 0; i < chest.getSlots(); i++) {
+                total += chest.getStackInSlot(i).getCount();
+            }
+            return total == 5 ? null : "chest holds " + total + " items, expected 5";
+        }));
+
+        // Speed upgrades make a furnace finish more items in the same time. Both furnaces are fed by battery boxes.
+        tests.add(new SelfTest.Test("speed-upgrades", c -> {
+            for (int row = 0; row < 2; row++) {
+                int z = row * 2;
+                c.machine(ModBlocks.BATTERY_BOX, EnumFacing.EAST, 0, 0, z);
+                c.machine(ModBlocks.ELECTRIC_FURNACE, EnumFacing.NORTH, 1, 0, z);
+                for (int i = 0; i < 300; i++) {
+                    c.energy(0, 0, z).receiveEnergy(1000, false);
+                }
+                c.items(1, 0, z).setStackInSlot(0, new ItemStack(ModItems.IRON_DUST, 20));
+            }
+            ((TileMachineBase) c.tile(1, 0, 2)).getUpgradeInventory().setStackInSlot(0, new ItemStack(ModItems.UPGRADE_SPEED, 4));
+        }, c -> {
+            int slow = c.items(1, 0, 0).getStackInSlot(1).getCount();
+            int fast = c.items(1, 0, 2).getStackInSlot(1).getCount();
+            return fast > slow && slow > 0 ? null : "plain furnace made " + slow + ", upgraded one made " + fast;
+        }));
+
+        // Efficiency upgrades lower the energy used for the same work.
+        tests.add(new SelfTest.Test("efficiency-upgrades", c -> {
+            for (int row = 0; row < 2; row++) {
+                int z = row * 2;
+                c.machine(ModBlocks.CRUSHER, EnumFacing.NORTH, 0, 0, z);
+                c.energy(0, 0, z).receiveEnergy(20000, false);
+                c.items(0, 0, z).setStackInSlot(0, new ItemStack(Blocks.COBBLESTONE, 1));
+            }
+            ((TileMachineBase) c.tile(0, 0, 2)).getUpgradeInventory().setStackInSlot(0, new ItemStack(ModItems.UPGRADE_EFFICIENCY, 4));
+        }, c -> {
+            int plain = c.energy(0, 0, 0).getEnergyStored();
+            int efficient = c.energy(0, 0, 2).getEnergyStored();
+            return efficient > plain ? null : "plain crusher has " + plain + " FE left, efficient one " + efficient;
+        }));
 
         tests.add(new SelfTest.Test("electric-drill-needs-energy", c -> { }, c -> {
             ItemStack empty = new ItemStack(ModItems.ELECTRIC_DRILL);

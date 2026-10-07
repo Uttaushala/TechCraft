@@ -1,15 +1,12 @@
 package com.techcraft.tile;
 
 import com.techcraft.ModConfig;
-import com.techcraft.energy.SidedEnergyWrapper;
 import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,7 +40,7 @@ public class TileLavaGenerator extends TileFluidBase {
         }
         rate = burning ? config.energyPerTick : 0;
         updateActive(burning);
-        pushEnergy(config.maxOutput, EnumFacing.VALUES);
+        pushEnergy(config.maxOutput);
         syncFluid();
     }
 
@@ -53,13 +50,18 @@ public class TileLavaGenerator extends TileFluidBase {
     }
 
     @Override
-    protected boolean allowExternalDrain() {
+    protected boolean defaultFluidOutput(EnumFacing side) {
         return false;
     }
 
     @Override
-    protected IEnergyStorage getEnergyCapability(@Nullable EnumFacing side) {
-        return new SidedEnergyWrapper(energy, false, true);
+    protected boolean defaultEnergyInput(EnumFacing side) {
+        return false;
+    }
+
+    @Override
+    protected boolean defaultEnergyOutput(EnumFacing side) {
+        return true;
     }
 
     @Override

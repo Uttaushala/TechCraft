@@ -7,6 +7,7 @@ import com.techcraft.item.ItemElectricTool;
 import com.techcraft.item.ItemEnergyBase;
 import com.techcraft.item.ItemEnergyMeter;
 import com.techcraft.item.ItemTechWrench;
+import com.techcraft.item.ItemUpgrade;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -45,6 +46,8 @@ public final class ModItems {
             () -> ModConfig.equipment.chainsawEnergyPerBlock, () -> ModConfig.equipment.chainsawSpeed,
             new HashSet<>(Arrays.asList("axe")),
             new HashSet<>(Arrays.asList(Material.WOOD, Material.LEAVES, Material.PLANTS, Material.VINE)));
+    public static final Item UPGRADE_SPEED = new ItemUpgrade("upgrade_speed", ItemUpgrade.Type.SPEED);
+    public static final Item UPGRADE_EFFICIENCY = new ItemUpgrade("upgrade_efficiency", ItemUpgrade.Type.EFFICIENCY);
     public static final Item TECH_WRENCH = new ItemTechWrench("tech_wrench");
     public static final Item ENERGY_METER = new ItemEnergyMeter("energy_meter");
 
@@ -58,7 +61,7 @@ public final class ModItems {
             all.add(PLATES[i]);
         }
         all.addAll(Arrays.asList(BATTERY_BASIC, BATTERY_ADVANCED, BATTERY_ULTIMATE,
-                ELECTRIC_DRILL, CHAINSAW, TECH_WRENCH, ENERGY_METER));
+                ELECTRIC_DRILL, CHAINSAW, TECH_WRENCH, ENERGY_METER, UPGRADE_SPEED, UPGRADE_EFFICIENCY));
         for (BlockMachine block : ModBlocks.MACHINES) {
             ItemBlock item = new ItemBlock(block);
             item.setRegistryName(block.getRegistryName());

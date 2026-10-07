@@ -1,12 +1,9 @@
 package com.techcraft.tile;
 
 import com.techcraft.ModConfig;
-import com.techcraft.energy.SidedEnergyWrapper;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.energy.IEnergyStorage;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,7 +22,7 @@ public class TileBatteryBox extends TileMachineBase {
 
     @Override
     protected void tickServer() {
-        pushEnergy(transferRate, getFacing());
+        pushEnergy(transferRate);
     }
 
     public static class Advanced extends TileBatteryBox {
@@ -41,12 +38,13 @@ public class TileBatteryBox extends TileMachineBase {
     }
 
     @Override
-    protected IEnergyStorage getEnergyCapability(@Nullable EnumFacing side) {
-        if (side == null) {
-            return energy;
-        }
-        boolean front = side == getFacing();
-        return new SidedEnergyWrapper(energy, !front, front);
+    protected boolean defaultEnergyInput(EnumFacing side) {
+        return side != getFacing();
+    }
+
+    @Override
+    protected boolean defaultEnergyOutput(EnumFacing side) {
+        return side == getFacing();
     }
 
     @Override

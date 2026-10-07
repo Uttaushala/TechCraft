@@ -1,5 +1,7 @@
 package com.techcraft.inventory;
 
+import com.techcraft.item.ItemUpgrade;
+import com.techcraft.tile.SideConfig;
 import com.techcraft.tile.TileMachineBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -14,6 +16,7 @@ public class ContainerMachine extends Container {
     private final TileMachineBase tile;
     private final int machineSlots;
     private final int inputSlots;
+    private final int upgradeSlots;
     /** Server: last values sent. Client: values received from the server. */
     private final int[] fields = new int[TileMachineBase.FIELD_COUNT];
 
@@ -26,7 +29,12 @@ public class ContainerMachine extends Container {
             addSlotToContainer(slot);
             count++;
         }
+        for (Slot slot : tile.createUpgradeSlots()) {
+            addSlotToContainer(slot);
+            count++;
+        }
         this.machineSlots = count;
+        this.upgradeSlots = tile.getUpgradeSlotCount();
 
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
@@ -95,6 +103,19 @@ public class ContainerMachine extends Container {
         }
     }
 
+    /** Side-configuration buttons in the GUI send ids 100 + resource * 6 + face index. */
+    @Override
+    public boolean enchantItem(EntityPlayer player, int id) {
+        int index = id - 100;
+        if (index < 0 || index >= SideConfig.RESOURCES * 6) {
+            return false;
+        }
+        if (!player.world.isRemote) {
+            tile.cycleSide(index / 6, tile.uiFace(index % 6));
+        }
+        return true;
+    }
+
     @Override
     public boolean canInteractWith(EntityPlayer player) {
         return !tile.isInvalid()
@@ -115,6 +136,10 @@ public class ContainerMachine extends Container {
 
         if (index < machineSlots) {
             if (!mergeItemStack(stack, playerStart, playerEnd, true)) {
+                return ItemStack.EMPTY;
+            }
+        } else if (upgradeSlots > 0 && stack.getItem() instanceof ItemUpgrade) {
+            if (!mergeItemStack(stack, machineSlots - upgradeSlots, machineSlots, false)) {
                 return ItemStack.EMPTY;
             }
         } else if (inputSlots > 0 && inventorySlots.get(0).isItemValid(stack)) {

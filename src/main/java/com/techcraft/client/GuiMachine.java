@@ -1,6 +1,8 @@
 package com.techcraft.client;
 
 import com.techcraft.inventory.ContainerMachine;
+import com.techcraft.tile.FaceMode;
+import com.techcraft.tile.SideConfig;
 import com.techcraft.tile.TileAlloyFurnace;
 import com.techcraft.tile.TileBatteryBox;
 import com.techcraft.tile.TileCharger;
@@ -9,12 +11,14 @@ import com.techcraft.tile.TileFluidBase;
 import com.techcraft.tile.TileFluidTank;
 import com.techcraft.tile.TileMachineBase;
 import com.techcraft.tile.TileProcessor;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Slot;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -37,6 +41,12 @@ public class GuiMachine extends GuiContainer {
     private static final int COLOR_SLOT = 0xFF8B8B8B;
     private static final int COLOR_TEXT = 0x404040;
 
+    private static final int TOGGLE_ID = 1;
+    private static final int PANEL_ROW = 15;
+    private static final int PANEL_COLUMN = 26;
+    private static final String[] FACE_KEYS = {"front", "back", "left", "right", "top", "bottom"};
+    private static final String[] RESOURCE_NAMES = {"FE", "Item", "Fluid"};
+
     private final ContainerMachine container;
     private final TileMachineBase tile;
     private final TileFluidBase fluidTile;
@@ -50,6 +60,86 @@ public class GuiMachine extends GuiContainer {
         this.bigTank = tile instanceof TileFluidTank;
         this.xSize = 176;
         this.ySize = 166;
+    }
+
+    private boolean showSides;
+    private final List<SideButton> sideButtons = new ArrayList<>();
+    private final List<Integer> panelResources = new ArrayList<>();
+
+    private static final class SideButton extends GuiButton {
+        final int resource;
+        final int faceIndex;
+
+        SideButton(int resource, int faceIndex, int x, int y) {
+            super(100 + resource * 6 + faceIndex, x, y, PANEL_COLUMN - 2, 12, "");
+            this.resource = resource;
+            this.faceIndex = faceIndex;
+        }
+    }
+
+    private List<Integer> availableResources() {
+        List<Integer> resources = new ArrayList<>();
+        if (hasEnergyBar()) {
+            resources.add(SideConfig.ENERGY);
+        }
+        if (tile.getInventory().getSlots() > 0) {
+            resources.add(SideConfig.ITEMS);
+        }
+        if (fluidTile != null) {
+            resources.add(SideConfig.FLUIDS);
+        }
+        return resources;
+    }
+
+    private int panelX() {
+        return guiLeft + xSize + 4;
+    }
+
+    private int panelWidth() {
+        return 46 + panelResources.size() * PANEL_COLUMN;
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        buttonList.clear();
+        sideButtons.clear();
+        buttonList.add(new GuiButton(TOGGLE_ID, guiLeft + xSize - 22, guiTop + 3, 14, 12, "S"));
+        panelResources.clear();
+        panelResources.addAll(availableResources());
+        if (showSides) {
+            for (int column = 0; column < panelResources.size(); column++) {
+                for (int face = 0; face < 6; face++) {
+                    SideButton button = new SideButton(panelResources.get(column), face,
+                            panelX() + 44 + column * PANEL_COLUMN, guiTop + 28 + face * PANEL_ROW);
+                    sideButtons.add(button);
+                    buttonList.add(button);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) {
+        if (button.id == TOGGLE_ID) {
+            showSides = !showSides;
+            initGui();
+        } else if (button instanceof SideButton) {
+            mc.playerController.sendEnchantPacket(inventorySlots.windowId, button.id);
+        }
+    }
+
+    private String modeLabel(FaceMode mode) {
+        switch (mode) {
+            case INPUT:
+                return "\u00a79" + I18n.format("gui.techcraft.mode.in");
+            case OUTPUT:
+                return "\u00a76" + I18n.format("gui.techcraft.mode.out");
+            case DISABLED:
+                return "\u00a7c" + I18n.format("gui.techcraft.mode.off");
+            default:
+                return "\u00a77" + I18n.format("gui.techcraft.mode.default");
+        }
     }
 
     private boolean hasEnergyBar() {
@@ -66,6 +156,11 @@ public class GuiMachine extends GuiContainer {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        for (SideButton button : sideButtons) {
+            EnumFacing face = tile.uiFace(button.faceIndex);
+            int packed = container.getField(TileMachineBase.FIELD_SIDES + button.resource);
+            button.displayString = modeLabel(SideConfig.decodeFace(packed, face));
+        }
         drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
         renderHoveredToolTip(mouseX, mouseY);
@@ -91,6 +186,23 @@ public class GuiMachine extends GuiContainer {
         drawRect(left + 1, top + 1, left + xSize - 1, top + ySize - 1, COLOR_LIGHT);
         drawRect(left + 3, top + 3, left + xSize - 1, top + ySize - 1, COLOR_SHADOW);
         drawRect(left + 3, top + 3, left + xSize - 3, top + ySize - 3, COLOR_PANEL);
+
+        if (showSides) {
+            int px = panelX();
+            int py = top + 4;
+            int ph = 28 + 6 * PANEL_ROW + 4 - 4;
+            drawRect(px, py, px + panelWidth(), py + ph, 0xFF000000);
+            drawRect(px + 1, py + 1, px + panelWidth() - 1, py + ph - 1, COLOR_PANEL);
+            fontRenderer.drawString(I18n.format("gui.techcraft.sides"), px + 6, py + 5, COLOR_TEXT);
+            for (int column = 0; column < panelResources.size(); column++) {
+                fontRenderer.drawString(RESOURCE_NAMES[panelResources.get(column)], px + 44 + column * PANEL_COLUMN + 2,
+                        py + 15, COLOR_TEXT);
+            }
+            for (int face = 0; face < 6; face++) {
+                fontRenderer.drawString(I18n.format("gui.techcraft.side." + FACE_KEYS[face]), px + 6,
+                        top + 30 + face * PANEL_ROW, COLOR_TEXT);
+            }
+        }
 
         // Slots
         for (Slot slot : inventorySlots.inventorySlots) {
