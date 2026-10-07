@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 public class ItemBase extends Item {
     public ItemBase(String name) {
         setRegistryName(TechCraft.MODID, name);
-        setUnlocalizedName(TechCraft.MODID + "." + name);
+        setTranslationKey(TechCraft.MODID + "." + name);
         setCreativeTab(TechCraft.TAB);
     }
 }

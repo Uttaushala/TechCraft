@@ -28,7 +28,7 @@ jobs:
       - name: Build
         run: |
           chmod +x gradlew
-          ./gradlew setupCIWorkspace build --no-daemon --stacktrace
+          ./gradlew setupCIWorkspace build --no-daemon
 
       - name: Upload mod jar
         uses: actions/upload-artifact@v4

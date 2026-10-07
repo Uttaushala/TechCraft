@@ -27,7 +27,7 @@ public class TechCraft {
 
     public static final CreativeTabs TAB = new CreativeTabs(MODID) {
         @Override
-        public ItemStack getTabIconItem() {
+        public ItemStack createIcon() {
             return new ItemStack(ModItems.COAL_GENERATOR);
         }
     };

@@ -37,7 +37,7 @@ public class BlockMachine extends Block implements ITileEntityProvider {
         super(Material.IRON);
         this.tileFactory = tileFactory;
         setRegistryName(TechCraft.MODID, name);
-        setUnlocalizedName(TechCraft.MODID + "." + name);
+        setTranslationKey(TechCraft.MODID + "." + name);
         setCreativeTab(TechCraft.TAB);
         setHardness(3.5F);
         setResistance(10.0F);
@@ -97,7 +97,7 @@ public class BlockMachine extends Block implements ITileEntityProvider {
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState()
-                .withProperty(FACING, EnumFacing.getHorizontal(meta & 3))
+                .withProperty(FACING, EnumFacing.byHorizontalIndex(meta & 3))
                 .withProperty(ACTIVE, (meta & 4) != 0);
     }
 

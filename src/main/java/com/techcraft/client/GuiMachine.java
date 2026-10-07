@@ -102,7 +102,7 @@ public class GuiMachine extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        String title = I18n.format(tile.getBlockType().getUnlocalizedName() + ".name");
+        String title = I18n.format(tile.getBlockType().getTranslationKey() + ".name");
         fontRenderer.drawString(title, (xSize - fontRenderer.getStringWidth(title)) / 2, 6, COLOR_TEXT);
         fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 94, COLOR_TEXT);
 
