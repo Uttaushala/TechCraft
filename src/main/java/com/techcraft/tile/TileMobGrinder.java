@@ -58,7 +58,7 @@ public class TileMobGrinder extends TileGridMachine {
         }
 
         for (EntityItem drop : world.getEntitiesWithinAABB(EntityItem.class, area.grow(1.0))) {
-            if (drop.isDead || drop.cannotPickup()) {
+            if (drop.isDead) {
                 continue;
             }
             ItemStack left = insertInternal(drop.getItem().copy());
