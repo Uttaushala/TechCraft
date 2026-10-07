@@ -12,6 +12,8 @@ import com.techcraft.tile.TileCoalGenerator;
 import com.techcraft.tile.TileCompressor;
 import com.techcraft.tile.TileCrusher;
 import com.techcraft.tile.TileElectricFurnace;
+import com.techcraft.tile.TileEuToFe;
+import com.techcraft.tile.TileFeToEu;
 import com.techcraft.tile.TileFluidTank;
 import com.techcraft.tile.TileGeothermalGenerator;
 import com.techcraft.tile.TileLavaGenerator;
@@ -49,6 +51,8 @@ public final class RegistryHandler {
         GameRegistry.registerTileEntity(TileSolarPanel.Basic.class, new ResourceLocation(TechCraft.MODID, "solar_panel"));
         GameRegistry.registerTileEntity(TileSolarPanel.Advanced.class, new ResourceLocation(TechCraft.MODID, "solar_panel_advanced"));
         GameRegistry.registerTileEntity(TileSolarPanel.Ultimate.class, new ResourceLocation(TechCraft.MODID, "solar_panel_ultimate"));
+        GameRegistry.registerTileEntity(TileEuToFe.class, new ResourceLocation(TechCraft.MODID, "eu_to_fe_converter"));
+        GameRegistry.registerTileEntity(TileFeToEu.class, new ResourceLocation(TechCraft.MODID, "fe_to_eu_converter"));
         GameRegistry.registerTileEntity(TilePump.class, new ResourceLocation(TechCraft.MODID, "pump"));
         GameRegistry.registerTileEntity(TileGeothermalGenerator.class, new ResourceLocation(TechCraft.MODID, "geothermal_generator"));
         GameRegistry.registerTileEntity(TileWaterWheel.class, new ResourceLocation(TechCraft.MODID, "water_wheel"));

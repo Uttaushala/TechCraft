@@ -1,6 +1,6 @@
 name: Explore third-party APIs
 
-# Temporary: checks whether the Mekanism 1.12 API sources can be fetched from GitHub.
+# Temporary: prints the Mekanism 9.8.3.390 gas API sources so the integration can be written against them.
 on:
   push:
     branches: [claude/minecraft-mod-mro3ht]
@@ -11,13 +11,20 @@ jobs:
   explore:
     runs-on: ubuntu-latest
     steps:
-      - name: Mekanism branches and API sources
-        continue-on-error: true
+      - name: Fetch the API sources
         run: |
-          curl -s "https://api.github.com/repos/mekanism/Mekanism/branches?per_page=100" | grep '"name"' | head -30
-          curl -s "https://api.github.com/repos/mekanism/Mekanism/tags?per_page=100" | grep '"name"' | grep -E "1\.12|9\.8" | head -20
-          for ref in 1.12.x 1.12 v1.12.2-9.8.3.390 1.12.2-9.8.3.390; do
-            code=$(curl -s -o /tmp/IGasHandler.java -w '%{http_code}' "https://raw.githubusercontent.com/mekanism/Mekanism/$ref/src/main/java/mekanism/api/gas/IGasHandler.java")
-            echo "$ref -> $code"
-            [ "$code" = 200 ] && { cat /tmp/IGasHandler.java; break; }
+          mkdir -p /tmp/mek && cd /tmp/mek
+          curl -sfL -o mek.zip https://codeload.github.com/mekanism/Mekanism/zip/refs/tags/9.8.3.390
+          unzip -q mek.zip "Mekanism-9.8.3.390/src/main/java/mekanism/api/*"
+          cd Mekanism-9.8.3.390/src/main/java/mekanism/api
+          echo "== api tree"; find . -maxdepth 1 | sort; ls gas
+          for f in gas/Gas.java gas/GasStack.java gas/GasRegistry.java gas/GasTankInfo.java gas/GasTank.java gas/ITubeConnection.java; do
+            echo "=== $f"; grep -vE '^\s*(\*|/\*|//)' "$f" | grep -vE '^\s*$' | head -90
           done
+          echo "== imports used by gas package"; grep -h "^import mekanism" gas/*.java | sort -u
+          echo "== capability and CapabilityInject"; grep -rn "CapabilityInject\|GAS_HANDLER" /tmp/mek --include=*.java | head
+      - name: Where is the gas capability?
+        run: |
+          curl -s "https://raw.githubusercontent.com/mekanism/Mekanism/9.8.3.390/src/main/java/mekanism/common/capabilities/Capabilities.java" | grep -v '^\s*\*\|^\s*/\*\|^$' | head -40
+          echo "== gas fuel values in Mekanism Generators"
+          curl -s "https://raw.githubusercontent.com/mekanism/Mekanism/9.8.3.390/src/generators/java/mekanism/generators/common/FuelHandler.java" | head -80

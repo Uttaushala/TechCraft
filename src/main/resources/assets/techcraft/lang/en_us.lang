@@ -23,6 +23,8 @@ tile.techcraft.auto_miner.name=Auto Miner
 tile.techcraft.block_breaker.name=Block Breaker
 tile.techcraft.block_placer.name=Block Placer
 tile.techcraft.mob_grinder.name=Mob Grinder
+tile.techcraft.eu_to_fe_converter.name=EU to FE Converter
+tile.techcraft.fe_to_eu_converter.name=FE to EU Converter
 
 item.techcraft.iron_dust.name=Iron Dust
 item.techcraft.gold_dust.name=Gold Dust
@@ -101,3 +103,4 @@ techcraft.config.miner=Auto Miner
 techcraft.config.blockbreaker=Block Breaker
 techcraft.config.blockplacer=Block Placer
 techcraft.config.mobgrinder=Mob Grinder
+techcraft.config.ic2=IC2 Converters

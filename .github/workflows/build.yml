@@ -59,10 +59,28 @@ jobs:
           grep -E "SELFTEST|Exception|ERROR|FATAL" server.log | grep -v "Missing" | head -80 || true
           grep -q "SELFTEST RESULT: PASSED" server.log || { echo "Self-test did not pass; end of log:"; tail -120 server.log; exit 1; }
 
+      # Same test again with IndustrialCraft 2 installed, to check the EU converters against its real energy net.
+      - name: Smoke test with IC2 installed
+        run: |
+          cd servertest
+          if curl -sfL -o ic2.jar "https://maven.ic2.player.to/net/industrial-craft/industrialcraft-2/2.8.222-ex112/industrialcraft-2-2.8.222-ex112.jar"; then
+            cp ic2.jar mods/
+            rm -rf world
+            set +e
+            timeout 900 java -Xmx2G -Dtechcraft.selftest=true -jar "forge-$FORGE-universal.jar" nogui > server-ic2.log 2>&1
+            set -e
+            grep -E "SELFTEST|ic2.*(ERROR|Exception)" server-ic2.log | head -60 || true
+            grep -q "SELFTEST RESULT: PASSED" server-ic2.log || { echo "Self-test with IC2 did not pass; end of log:"; tail -150 server-ic2.log; exit 1; }
+          else
+            echo "IC2 could not be downloaded, skipping"
+          fi
+
       - name: Upload server log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: server-log
-          path: servertest/server.log
+          path: |
+            servertest/server.log
+            servertest/server-ic2.log
           if-no-files-found: ignore

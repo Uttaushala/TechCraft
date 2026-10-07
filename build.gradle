@@ -37,3 +37,14 @@ processResources {
         exclude "mcmod.info"
     }
 }
+
+repositories {
+    maven { url = "https://dvs1.progwml6.com/files/maven" }
+    maven { url = "https://maven.ic2.player.to/" }
+}
+
+dependencies {
+    // Compile-only: the real mods come with the modpack. JEI and IC2 integration is loaded only when they are present.
+    deobfProvided "mezz.jei:jei_1.12.2:4.16.1.302:api"
+    deobfProvided "net.industrial-craft:industrialcraft-2:2.8.222-ex112:api"
+}

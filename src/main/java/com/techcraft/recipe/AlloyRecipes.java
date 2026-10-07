@@ -7,6 +7,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,6 +47,15 @@ public final class AlloyRecipes {
 
     private static Ingredient item(ItemStack stack) {
         return new Ingredient(null, stack);
+    }
+
+    public static List<DisplayRecipe> displayRecipes() {
+        List<DisplayRecipe> recipes = new ArrayList<>();
+        for (Recipe recipe : RECIPES) {
+            recipes.add(new DisplayRecipe(Arrays.asList(recipe.a.stacks(recipe.countA), recipe.b.stacks(recipe.countB)),
+                    recipe.output.copy()));
+        }
+        return recipes;
     }
 
     public static boolean isIngredient(ItemStack stack) {
@@ -115,6 +125,22 @@ public final class AlloyRecipes {
         Ingredient(@Nullable String ore, ItemStack stack) {
             this.ore = ore;
             this.stack = stack;
+        }
+
+        /** The stacks that satisfy this ingredient, each with the required count. */
+        List<ItemStack> stacks(int count) {
+            List<ItemStack> result = new ArrayList<>();
+            if (ore == null) {
+                result.add(stack.copy());
+            } else {
+                for (ItemStack candidate : OreDictionary.getOres(ore, false)) {
+                    result.add(candidate.copy());
+                }
+            }
+            for (ItemStack candidate : result) {
+                candidate.setCount(count);
+            }
+            return result;
         }
 
         boolean matches(ItemStack candidate) {

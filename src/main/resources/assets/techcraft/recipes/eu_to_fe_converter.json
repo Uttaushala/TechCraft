@@ -1,0 +1,28 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "GRG",
+    "CMC",
+    "GRG"
+  ],
+  "key": {
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "plateGold"
+    },
+    "R": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "M": {
+      "item": "techcraft:machine_frame"
+    }
+  },
+  "result": {
+    "item": "techcraft:eu_to_fe_converter",
+    "count": 1
+  }
+}

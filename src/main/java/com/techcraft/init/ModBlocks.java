@@ -12,6 +12,8 @@ import com.techcraft.tile.TileCoalGenerator;
 import com.techcraft.tile.TileCompressor;
 import com.techcraft.tile.TileCrusher;
 import com.techcraft.tile.TileElectricFurnace;
+import com.techcraft.tile.TileEuToFe;
+import com.techcraft.tile.TileFeToEu;
 import com.techcraft.tile.TileFluidTank;
 import com.techcraft.tile.TileGeothermalGenerator;
 import com.techcraft.tile.TileLavaGenerator;
@@ -52,11 +54,15 @@ public final class ModBlocks {
     public static final BlockMachine BLOCK_PLACER = new BlockMachine("block_placer", TileBlockPlacer::new);
     public static final BlockMachine MOB_GRINDER = new BlockMachine("mob_grinder", TileMobGrinder::new);
 
+    public static final BlockMachine EU_TO_FE = new BlockMachine("eu_to_fe_converter", TileEuToFe::new);
+    public static final BlockMachine FE_TO_EU = new BlockMachine("fe_to_eu_converter", TileFeToEu::new);
+
     public static final BlockMachine[] MACHINES = {
             COAL_GENERATOR, ELECTRIC_FURNACE, CRUSHER, BATTERY_BOX,
             COMPRESSOR, ALLOY_FURNACE, CHARGER, LAVA_GENERATOR, FLUID_TANK, WIND_TURBINE,
             SOLAR_PANEL, SOLAR_PANEL_ADVANCED, SOLAR_PANEL_ULTIMATE, BATTERY_BOX_ADVANCED, BATTERY_BOX_ULTIMATE,
-            PUMP, GEOTHERMAL_GENERATOR, WATER_WHEEL, BIOMASS_GENERATOR, AUTO_MINER, BLOCK_BREAKER, BLOCK_PLACER, MOB_GRINDER
+            PUMP, GEOTHERMAL_GENERATOR, WATER_WHEEL, BIOMASS_GENERATOR, AUTO_MINER, BLOCK_BREAKER, BLOCK_PLACER, MOB_GRINDER,
+            EU_TO_FE, FE_TO_EU
     };
 
     private ModBlocks() {

@@ -332,6 +332,22 @@ for on in (False, True):
     save_block(front_placer(on), "block_placer" + sfx)
     save_block(front_grinder(on), "mob_grinder" + sfx)
 
+# ---- IC2 converters: a bolt and an arrow, colours say which way energy flows ----
+def converter_front(eu_to_fe):
+    im = casing()
+    frame(im, 3, 3, 12, 12, BASE)
+    rect(im, 4, 4, 11, 11, (30, 32, 44, 255))
+    left, right = ((255, 200, 60, 255), (230, 60, 50, 255)) if eu_to_fe else ((230, 60, 50, 255), (255, 200, 60, 255))
+    rect(im, 5, 5, 6, 10, left)
+    rect(im, 9, 5, 10, 10, right)
+    for p in ((7, 7), (8, 7), (7, 8), (8, 8)):
+        im.putpixel(p, (235, 238, 245, 255))
+    return im
+
+
+save_block(converter_front(True), "eu_to_fe_converter_front")
+save_block(converter_front(False), "fe_to_eu_converter_front")
+
 # ---- fluid tank: glass gauge ----
 tank_side = casing((130, 140, 150))
 for y in range(3, 13):

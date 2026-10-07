@@ -36,6 +36,8 @@ machines = {
     "block_breaker": ("machine_side", "machine_top", "block_breaker_front", "block_breaker_front_on"),
     "block_placer": ("machine_side", "machine_top", "block_placer_front", "block_placer_front_on"),
     "mob_grinder": ("machine_side", "machine_top", "mob_grinder_front", "mob_grinder_front_on"),
+    "eu_to_fe_converter": ("machine_side", "machine_top", "eu_to_fe_converter_front", "eu_to_fe_converter_front"),
+    "fe_to_eu_converter": ("machine_side", "machine_top", "fe_to_eu_converter_front", "fe_to_eu_converter_front"),
     "solar_panel": ("machine_side", "solar_top_basic", "solar_front", "solar_front"),
     "solar_panel_advanced": ("machine_side", "solar_top_advanced", "solar_front", "solar_front"),
     "solar_panel_ultimate": ("machine_side", "solar_top_ultimate", "solar_front", "solar_front"),
@@ -121,6 +123,8 @@ recipes = {
     "tech_boots": (["SBS", "S S"], {"S": P_STEEL, "B": T("battery_advanced")}, "tech_boots", 1),
     "energy_sword": ([" P ", " P ", "CBC"], {"P": P_STEEL, "C": CIRCUIT, "B": T("battery_advanced")}, "energy_sword", 1),
     "magnet": (["I I", "IBI", " C "], {"I": IRON, "B": T("battery_basic"), "C": CIRCUIT}, "magnet", 1),
+    "eu_to_fe_converter": (["GRG", "CMC", "GRG"], {"G": P_GOLD, "R": REDSTONE, "C": CIRCUIT, "M": FRAME}, "eu_to_fe_converter", 1),
+    "fe_to_eu_converter": (["PRP", "CMC", "PRP"], {"P": P_COPPER, "R": REDSTONE, "C": CIRCUIT, "M": FRAME}, "fe_to_eu_converter", 1),
     "tech_wrench": (["I I", "IMI", " I "], {"I": IRON, "M": FRAME}, "tech_wrench", 1),
     "energy_meter": (["R R", "ICI", " I "], {"R": REDSTONE, "I": IRON, "C": CIRCUIT}, "energy_meter", 1),
 }

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "techcraft:blocks/machine_top",
+    "front": "techcraft:blocks/fe_to_eu_converter_front",
+    "side": "techcraft:blocks/machine_side"
+  }
+}

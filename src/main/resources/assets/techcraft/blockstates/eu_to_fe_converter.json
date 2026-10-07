@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "active=false,facing=north": {
+      "model": "techcraft:eu_to_fe_converter"
+    },
+    "active=true,facing=north": {
+      "model": "techcraft:eu_to_fe_converter_on"
+    },
+    "active=false,facing=east": {
+      "model": "techcraft:eu_to_fe_converter",
+      "y": 90
+    },
+    "active=true,facing=east": {
+      "model": "techcraft:eu_to_fe_converter_on",
+      "y": 90
+    },
+    "active=false,facing=south": {
+      "model": "techcraft:eu_to_fe_converter",
+      "y": 180
+    },
+    "active=true,facing=south": {
+      "model": "techcraft:eu_to_fe_converter_on",
+      "y": 180
+    },
+    "active=false,facing=west": {
+      "model": "techcraft:eu_to_fe_converter",
+      "y": 270
+    },
+    "active=true,facing=west": {
+      "model": "techcraft:eu_to_fe_converter_on",
+      "y": 270
+    }
+  }
+}

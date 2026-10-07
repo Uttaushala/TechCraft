@@ -71,6 +71,9 @@ public class ModConfig {
     @Config.Comment("Mob Grinder settings")
     public static Grinder mobGrinder = new Grinder();
 
+    @Config.Comment("IC2 energy converters (need IndustrialCraft 2)")
+    public static Ic2 ic2 = new Ic2();
+
     @Config.Comment("Batteries and electric tools")
     public static Equipment equipment = new Equipment();
 
@@ -193,6 +196,24 @@ public class ModConfig {
         @Config.Comment("Storage (mB)")
         @Config.RangeInt(min = 1000, max = 100000000)
         public int capacity = 64000;
+    }
+
+    public static class Ic2 {
+        @Config.Comment("FE per 1 EU")
+        @Config.RangeInt(min = 1, max = 100)
+        public int feePerEu = 4;
+
+        @Config.Comment("Internal buffer of each converter (FE)")
+        @Config.RangeInt(min = 1000, max = 100000000)
+        public int capacity = 200000;
+
+        @Config.Comment("Max FE per tick moved to the FE side by the EU to FE converter")
+        @Config.RangeInt(min = 1, max = 100000000)
+        public int maxFeOutput = 20000;
+
+        @Config.Comment("IC2 tier of the converters: 1 = 32 EU/t, 2 = 128, 3 = 512, 4 = 2048, 5 = 8192")
+        @Config.RangeInt(min = 1, max = 5)
+        public int tier = 4;
     }
 
     public static class Geothermal {

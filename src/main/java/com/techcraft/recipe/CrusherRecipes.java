@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,21 @@ public final class CrusherRecipes {
             output.setCount(count);
             ORE_RECIPES.put(input, output);
         }
+    }
+
+    /** Every recipe with the stacks each ore dictionary entry currently stands for, for recipe viewers. */
+    public static List<DisplayRecipe> displayRecipes() {
+        List<DisplayRecipe> recipes = new ArrayList<>();
+        for (Recipe recipe : ITEM_RECIPES) {
+            recipes.add(new DisplayRecipe(Collections.singletonList(Collections.singletonList(recipe.input.copy())), recipe.output.copy()));
+        }
+        for (Map.Entry<String, ItemStack> entry : ORE_RECIPES.entrySet()) {
+            List<ItemStack> inputs = OreDictionary.getOres(entry.getKey(), false);
+            if (!inputs.isEmpty()) {
+                recipes.add(new DisplayRecipe(Collections.singletonList(new ArrayList<>(inputs)), entry.getValue().copy()));
+            }
+        }
+        return recipes;
     }
 
     public static void add(ItemStack input, ItemStack output) {

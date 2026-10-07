@@ -31,7 +31,7 @@ final class Tests {
             for (String name : Arrays.asList("circuit", "machine_frame", "coal_generator", "electric_furnace", "crusher",
                     "battery_box", "compressor", "alloy_furnace", "charger", "lava_generator", "fluid_tank", "wind_turbine",
                     "solar_panel", "solar_panel_advanced", "solar_panel_ultimate", "battery_box_advanced",
-                    "battery_box_ultimate", "tech_helmet", "tech_chestplate", "tech_leggings", "tech_boots", "energy_sword", "magnet", "pump", "geothermal_generator", "water_wheel", "biomass_generator", "auto_miner", "block_breaker", "block_placer", "mob_grinder", "upgrade_speed", "upgrade_efficiency", "battery_basic", "battery_advanced", "battery_ultimate", "electric_drill",
+                    "battery_box_ultimate", "eu_to_fe_converter", "fe_to_eu_converter", "tech_helmet", "tech_chestplate", "tech_leggings", "tech_boots", "energy_sword", "magnet", "pump", "geothermal_generator", "water_wheel", "biomass_generator", "auto_miner", "block_breaker", "block_placer", "mob_grinder", "upgrade_speed", "upgrade_efficiency", "battery_basic", "battery_advanced", "battery_ultimate", "electric_drill",
                     "chainsaw", "tech_wrench", "energy_meter")) {
                 SelfTest.recipeExists(missing, name);
             }
@@ -341,6 +341,45 @@ final class Tests {
             int used = magnet.getCapacity() - com.techcraft.item.ItemEnergyBase.getStored(stack);
             drop.setDead();
             return drop.motionX < -0.1 && used > 0 ? null : "item motion " + drop.motionX + ", energy used " + used;
+        }));
+
+        // Converter faces: the front is the IC2 or FE output, everything else is the input side.
+        tests.add(new SelfTest.Test("converter-faces", c -> {
+            c.machine(ModBlocks.EU_TO_FE, EnumFacing.NORTH, 0, 0, 0);
+            c.machine(ModBlocks.FE_TO_EU, EnumFacing.NORTH, 3, 0, 0);
+        }, c -> {
+            net.minecraft.tileentity.TileEntity euToFe = c.tile(0, 0, 0);
+            IEnergyStorage front = euToFe.getCapability(CapabilityEnergy.ENERGY, EnumFacing.NORTH);
+            if (front == null || !front.canExtract() || front.canReceive()) {
+                return "EU to FE converter should only give FE through its front";
+            }
+            if (euToFe.hasCapability(CapabilityEnergy.ENERGY, EnumFacing.SOUTH)) {
+                return "EU to FE converter should not expose FE on its back";
+            }
+            net.minecraft.tileentity.TileEntity feToEu = c.tile(3, 0, 0);
+            IEnergyStorage back = feToEu.getCapability(CapabilityEnergy.ENERGY, EnumFacing.SOUTH);
+            if (back == null || !back.canReceive() || back.canExtract()) {
+                return "FE to EU converter should only take FE on its back";
+            }
+            return feToEu.hasCapability(CapabilityEnergy.ENERGY, EnumFacing.NORTH) ? "FE to EU converter should not expose FE on its front" : null;
+        }));
+
+        // Only runs when IC2 is installed (the second CI server run): EU goes in, FE comes out of the front.
+        tests.add(new SelfTest.Test("ic2-eu-to-fe", c -> {
+            if (net.minecraftforge.fml.common.Loader.isModLoaded("ic2")) {
+                c.machine(ModBlocks.EU_TO_FE, EnumFacing.NORTH, 0, 0, 0);
+                c.machine(ModBlocks.CRUSHER, EnumFacing.NORTH, 0, 0, -1);
+                ((ic2.api.energy.tile.IEnergySink) c.tile(0, 0, 0)).injectEnergy(EnumFacing.SOUTH, 100.0, 32.0);
+            }
+        }, c -> {
+            if (!net.minecraftforge.fml.common.Loader.isModLoaded("ic2")) {
+                return null;
+            }
+            ic2.api.energy.tile.IEnergyTile registered = ic2.api.energy.EnergyNet.instance.getTile(c.world(), c.at(0, 0, 0));
+            if (registered == null) {
+                return "the converter did not join the IC2 energy net";
+            }
+            return c.expectEnergyAbove(c.energy(0, 0, -1), 0);
         }));
 
         tests.add(new SelfTest.Test("electric-drill-needs-energy", c -> { }, c -> {
