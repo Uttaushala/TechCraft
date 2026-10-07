@@ -50,6 +50,8 @@ public class TileMobGrinder extends TileGridMachine {
                 progress = 0;
                 FakePlayer player = FakePlayerFactory.getMinecraft((WorldServer) world);
                 for (EntityLiving mob : mobs) {
+                    // Every hit must count, however fast the machine runs.
+                    mob.hurtResistantTime = 0;
                     mob.attackEntityFrom(DamageSource.causePlayerDamage(player), config.damage);
                 }
             }
