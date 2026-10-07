@@ -71,6 +71,9 @@ public class ModConfig {
     @Config.Comment("Mob Grinder settings")
     public static Grinder mobGrinder = new Grinder();
 
+    @Config.Comment("Gas Tank and Gas Generator (need Mekanism)")
+    public static GasSettings gas = new GasSettings();
+
     @Config.Comment("IC2 energy converters (need IndustrialCraft 2)")
     public static Ic2 ic2 = new Ic2();
 
@@ -196,6 +199,29 @@ public class ModConfig {
         @Config.Comment("Storage (mB)")
         @Config.RangeInt(min = 1000, max = 100000000)
         public int capacity = 64000;
+    }
+
+    public static class GasSettings {
+        @Config.Comment("Gas Tank storage (mB)")
+        @Config.RangeInt(min = 1000, max = 100000000)
+        public int tankCapacity = 64000;
+
+        @Config.Comment("Gas Generator tank (mB)")
+        @Config.RangeInt(min = 1000, max = 100000000)
+        public int generatorTankCapacity = 16000;
+
+        @Config.Comment("Gas burned per tick")
+        @Config.RangeInt(min = 1, max = 10000)
+        public int mbPerTick = 2;
+
+        @Config.Comment("Gas name=FE produced per mB burned. Gases not listed can't be used.")
+        public String[] fuels = {"hydrogen=15", "ethene=60"};
+
+        @Config.RangeInt(min = 1000, max = 100000000)
+        public int generatorCapacity = 50000;
+
+        @Config.RangeInt(min = 1, max = 1000000)
+        public int generatorMaxOutput = 400;
     }
 
     public static class Ic2 {

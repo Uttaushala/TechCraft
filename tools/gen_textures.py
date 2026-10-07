@@ -348,6 +348,37 @@ def converter_front(eu_to_fe):
 save_block(converter_front(True), "eu_to_fe_converter_front")
 save_block(converter_front(False), "fe_to_eu_converter_front")
 
+# ---- gas tank and generator: purple-tinted pressure vessels ----
+gas_side = casing((128, 120, 150))
+for y in range(3, 13):
+    for x in (6, 7, 8, 9):
+        gas_side.putpixel((x, y), (120, 90, 170, 255) if y > 4 else (190, 175, 220, 255))
+save_block(gas_side, "gas_tank_side")
+gas_front = casing((128, 120, 150))
+frame(gas_front, 4, 3, 11, 12, (128, 120, 150))
+rect(gas_front, 5, 4, 10, 11, (170, 140, 215, 255))
+for y in range(4, 12):
+    gas_front.putpixel((6, y), (235, 225, 250, 255))
+rect(gas_front, 8, 6, 9, 6, (70, 55, 100, 255)); rect(gas_front, 8, 9, 9, 9, (70, 55, 100, 255))
+save_block(gas_front, "gas_tank_front")
+
+
+def front_gas_generator(on):
+    im = casing((128, 120, 150))
+    frame(im, 3, 3, 12, 12, (128, 120, 150))
+    rect(im, 4, 4, 11, 11, (35, 30, 50, 255))
+    flame = (120, 230, 255, 255) if on else (80, 70, 110, 255)
+    for (x, y) in ((8, 5), (7, 6), (8, 6), (7, 7), (8, 7), (9, 7), (6, 8), (7, 8), (8, 8), (9, 8), (7, 9), (8, 9), (7, 10), (8, 10)):
+        im.putpixel((x, y), flame)
+    if on:
+        for p in ((8, 7), (8, 8), (8, 9)):
+            im.putpixel(p, (235, 250, 255, 255))
+    return im
+
+
+save_block(front_gas_generator(False), "gas_generator_front")
+save_block(front_gas_generator(True), "gas_generator_front_on")
+
 # ---- fluid tank: glass gauge ----
 tank_side = casing((130, 140, 150))
 for y in range(3, 13):

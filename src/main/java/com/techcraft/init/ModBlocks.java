@@ -15,6 +15,8 @@ import com.techcraft.tile.TileElectricFurnace;
 import com.techcraft.tile.TileEuToFe;
 import com.techcraft.tile.TileFeToEu;
 import com.techcraft.tile.TileFluidTank;
+import com.techcraft.tile.TileGasGenerator;
+import com.techcraft.tile.TileGasTank;
 import com.techcraft.tile.TileGeothermalGenerator;
 import com.techcraft.tile.TileLavaGenerator;
 import com.techcraft.tile.TileMobGrinder;
@@ -23,7 +25,15 @@ import com.techcraft.tile.TileSolarPanel;
 import com.techcraft.tile.TileWaterWheel;
 import com.techcraft.tile.TileWindTurbine;
 
+import net.minecraftforge.fml.common.Loader;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public final class ModBlocks {
+    /** Gas blocks only exist when Mekanism is installed, because they need its gas API. */
+    private static final boolean MEKANISM = Loader.isModLoaded("mekanism");
+
     public static final BlockMachine COAL_GENERATOR = new BlockMachine("coal_generator", TileCoalGenerator::new);
     public static final BlockMachine ELECTRIC_FURNACE = new BlockMachine("electric_furnace", TileElectricFurnace::new);
     public static final BlockMachine CRUSHER = new BlockMachine("crusher", TileCrusher::new);
@@ -57,13 +67,26 @@ public final class ModBlocks {
     public static final BlockMachine EU_TO_FE = new BlockMachine("eu_to_fe_converter", TileEuToFe::new);
     public static final BlockMachine FE_TO_EU = new BlockMachine("fe_to_eu_converter", TileFeToEu::new);
 
-    public static final BlockMachine[] MACHINES = {
+    public static final BlockMachine GAS_TANK = MEKANISM ? new BlockMachine("gas_tank", TileGasTank::new) : null;
+    public static final BlockMachine GAS_GENERATOR = MEKANISM ? new BlockMachine("gas_generator", TileGasGenerator::new) : null;
+
+    public static final BlockMachine[] MACHINES = list(
             COAL_GENERATOR, ELECTRIC_FURNACE, CRUSHER, BATTERY_BOX,
             COMPRESSOR, ALLOY_FURNACE, CHARGER, LAVA_GENERATOR, FLUID_TANK, WIND_TURBINE,
             SOLAR_PANEL, SOLAR_PANEL_ADVANCED, SOLAR_PANEL_ULTIMATE, BATTERY_BOX_ADVANCED, BATTERY_BOX_ULTIMATE,
             PUMP, GEOTHERMAL_GENERATOR, WATER_WHEEL, BIOMASS_GENERATOR, AUTO_MINER, BLOCK_BREAKER, BLOCK_PLACER, MOB_GRINDER,
-            EU_TO_FE, FE_TO_EU
-    };
+            EU_TO_FE, FE_TO_EU, GAS_TANK, GAS_GENERATOR
+    );
+
+    private static BlockMachine[] list(BlockMachine... blocks) {
+        List<BlockMachine> present = new ArrayList<>();
+        for (BlockMachine block : blocks) {
+            if (block != null) {
+                present.add(block);
+            }
+        }
+        return present.toArray(new BlockMachine[0]);
+    }
 
     private ModBlocks() {
     }

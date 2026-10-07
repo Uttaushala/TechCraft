@@ -25,6 +25,8 @@ tile.techcraft.block_placer.name=Block Placer
 tile.techcraft.mob_grinder.name=Mob Grinder
 tile.techcraft.eu_to_fe_converter.name=EU to FE Converter
 tile.techcraft.fe_to_eu_converter.name=FE to EU Converter
+tile.techcraft.gas_tank.name=Gas Tank
+tile.techcraft.gas_generator.name=Gas Generator
 
 item.techcraft.iron_dust.name=Iron Dust
 item.techcraft.gold_dust.name=Gold Dust
@@ -104,3 +106,4 @@ techcraft.config.blockbreaker=Block Breaker
 techcraft.config.blockplacer=Block Placer
 techcraft.config.mobgrinder=Mob Grinder
 techcraft.config.ic2=IC2 Converters
+techcraft.config.gas=Gas (Mekanism)

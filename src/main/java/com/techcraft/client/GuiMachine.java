@@ -2,6 +2,7 @@ package com.techcraft.client;
 
 import com.techcraft.inventory.ContainerMachine;
 import com.techcraft.tile.FaceMode;
+import com.techcraft.tile.IGasDisplay;
 import com.techcraft.tile.SideConfig;
 import com.techcraft.tile.TileAlloyFurnace;
 import com.techcraft.tile.TileBatteryBox;
@@ -51,6 +52,7 @@ public class GuiMachine extends GuiContainer {
     private final ContainerMachine container;
     private final TileMachineBase tile;
     private final TileFluidBase fluidTile;
+    private final IGasDisplay gasTile;
     private final boolean bigTank;
 
     public GuiMachine(ContainerMachine container) {
@@ -58,7 +60,8 @@ public class GuiMachine extends GuiContainer {
         this.container = container;
         this.tile = container.getTile();
         this.fluidTile = tile instanceof TileFluidBase ? (TileFluidBase) tile : null;
-        this.bigTank = tile instanceof TileFluidTank;
+        this.gasTile = tile instanceof IGasDisplay ? (IGasDisplay) tile : null;
+        this.bigTank = tile instanceof TileFluidTank || (gasTile != null && gasTile.isBigDisplay());
         this.xSize = 176;
         this.ySize = 166;
     }
@@ -86,7 +89,7 @@ public class GuiMachine extends GuiContainer {
         if (tile.getInventory().getSlots() > 0) {
             resources.add(SideConfig.ITEMS);
         }
-        if (fluidTile != null) {
+        if (fluidTile != null || gasTile != null) {
             resources.add(SideConfig.FLUIDS);
         }
         return resources;
@@ -171,7 +174,7 @@ public class GuiMachine extends GuiContainer {
         if (hasEnergyBar() && x >= BAR_X && x < BAR_X + BAR_W && y >= BAR_Y && y < BAR_Y + BAR_H) {
             drawHoveringText(Collections.singletonList(energyText()), mouseX, mouseY);
         }
-        if (fluidTile != null && x >= fluidX() && x < fluidX() + fluidW() && y >= BAR_Y && y < BAR_Y + BAR_H) {
+        if ((fluidTile != null || gasTile != null) && x >= fluidX() && x < fluidX() + fluidW() && y >= BAR_Y && y < BAR_Y + BAR_H) {
             drawHoveringText(fluidText(), mouseX, mouseY);
         }
     }
@@ -223,6 +226,8 @@ public class GuiMachine extends GuiContainer {
 
         if (fluidTile != null) {
             drawFluidBar(left + fluidX(), top + BAR_Y, fluidW(), BAR_H);
+        } else if (gasTile != null) {
+            drawGasBar(left + fluidX(), top + BAR_Y, fluidW(), BAR_H);
         }
 
         int progress = container.getField(TileMachineBase.FIELD_PROGRESS);
@@ -272,6 +277,26 @@ public class GuiMachine extends GuiContainer {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
+    private void drawGasBar(int x, int y, int w, int h) {
+        drawInset(x - 1, y - 1, w + 2, h + 2, 0xFF2B2B2B);
+        net.minecraft.util.ResourceLocation icon = gasTile.getGasIcon();
+        if (icon == null || gasTile.getGasAmount() <= 0 || gasTile.getGasCapacity() <= 0) {
+            return;
+        }
+        int filled = scaled(gasTile.getGasAmount(), gasTile.getGasCapacity(), h);
+        TextureAtlasSprite sprite = mc.getTextureMapBlocks().getAtlasSprite(icon.toString());
+        int color = gasTile.getGasTint();
+        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        GlStateManager.color(((color >> 16) & 0xFF) / 255.0F, ((color >> 8) & 0xFF) / 255.0F, (color & 0xFF) / 255.0F, 1.0F);
+        for (int dy = 0; dy < filled; dy += 16) {
+            int th = Math.min(16, filled - dy);
+            for (int dx = 0; dx < w; dx += 16) {
+                drawTexturedModalRect(x + dx, y + h - dy - th, sprite, Math.min(16, w - dx), th);
+            }
+        }
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         String title = I18n.format(tile.getBlockType().getTranslationKey() + ".name");
@@ -296,7 +321,7 @@ public class GuiMachine extends GuiContainer {
             } else if (tile instanceof TileCharger) {
                 x = 104;
                 y = 40;
-            } else if (fluidTile != null) {
+            } else if (fluidTile != null || gasTile != null) {
                 x = 56;
             }
             fontRenderer.drawString(text, x, y, rate > 0 ? 0x207020 : 0x707070);
@@ -321,6 +346,12 @@ public class GuiMachine extends GuiContainer {
 
     private List<String> fluidText() {
         List<String> lines = new ArrayList<>();
+        if (gasTile != null) {
+            String name = gasTile.getGasName();
+            lines.add(name == null || gasTile.getGasAmount() <= 0 ? I18n.format("gui.techcraft.empty") : name);
+            lines.add(String.format("%,d / %,d mB", gasTile.getGasAmount(), gasTile.getGasCapacity()));
+            return lines;
+        }
         FluidTank tank = fluidTile.getTank();
         FluidStack stack = tank.getFluid();
         if (stack == null || stack.amount <= 0) {

@@ -48,3 +48,33 @@ dependencies {
     deobfProvided "mezz.jei:jei_1.12.2:4.16.1.302:api"
     deobfProvided "net.industrial-craft:industrialcraft-2:2.8.222-ex112:api"
 }
+
+// Mekanism's gas API, compiled against but never shipped: it is fetched from the Mekanism sources (the tag that matches
+// the version in the modpack) and left out of the jar, because the real Mekanism provides these classes at runtime.
+def mekanismApiDir = file("$buildDir/mekanism-api")
+
+task fetchMekanismApi {
+    outputs.dir mekanismApiDir
+    doLast {
+        def zip = new File(buildDir, "mekanism-9.8.3.390.zip")
+        zip.parentFile.mkdirs()
+        if (!zip.exists()) {
+            ant.get(src: "https://codeload.github.com/mekanism/Mekanism/zip/refs/tags/9.8.3.390", dest: zip)
+        }
+        delete mekanismApiDir
+        copy {
+            from zipTree(zip)
+            include "Mekanism-9.8.3.390/src/main/java/mekanism/api/**"
+            eachFile { it.path = it.path.replace("Mekanism-9.8.3.390/src/main/java/", "") }
+            includeEmptyDirs = false
+            into mekanismApiDir
+        }
+    }
+}
+
+sourceSets.main.java.srcDir mekanismApiDir
+tasks.matching { it.name == "sourceMainJava" }.all { it.dependsOn fetchMekanismApi }
+
+jar {
+    exclude "mekanism/api/**"
+}

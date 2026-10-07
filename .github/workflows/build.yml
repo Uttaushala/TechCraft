@@ -59,10 +59,28 @@ jobs:
           grep -E "SELFTEST|Exception|ERROR|FATAL" server.log | grep -v "Missing" | head -80 || true
           grep -q "SELFTEST RESULT: PASSED" server.log || { echo "Self-test did not pass; end of log:"; tail -120 server.log; exit 1; }
 
-      # Same test again with IndustrialCraft 2 installed, to check the EU converters against its real energy net.
-      - name: Smoke test with IC2 installed
+      # Same test again with IndustrialCraft 2 and Mekanism installed, to check the EU converters and the gas blocks
+      # against the real mods.
+      - name: Smoke test with IC2 and Mekanism installed
         run: |
           cd servertest
+          python3 - <<'PY'
+          import json, urllib.request
+          url = 'https://api.modrinth.com/v2/project/Ce6I4WUE/version?game_versions=%5B%221.12.2%22%5D&loaders=%5B%22forge%22%5D'
+          try:
+              versions = json.load(urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': 'techcraft-ci'})))
+              for v in versions:
+                  if v['version_number'].endswith('9.8.3.390') or '9.8.3.390' in v['name']:
+                      f = next(f for f in v['files'] if f.get('primary', True))
+                      urllib.request.urlretrieve(f['url'], 'mekanism.jar')
+                      print('downloaded Mekanism', v['version_number'])
+                      break
+              else:
+                  print('Mekanism 9.8.3.390 not found; versions:', [v['version_number'] for v in versions][:10])
+          except Exception as e:
+              print('Mekanism download failed:', e)
+          PY
+          if [ -s mekanism.jar ]; then cp mekanism.jar mods/; fi
           if curl -sfL -o ic2.jar "https://maven.ic2.player.to/net/industrial-craft/industrialcraft-2/2.8.222-ex112/industrialcraft-2-2.8.222-ex112.jar"; then
             cp ic2.jar mods/
             rm -rf world

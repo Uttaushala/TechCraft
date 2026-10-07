@@ -26,6 +26,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -53,6 +54,10 @@ public final class RegistryHandler {
         GameRegistry.registerTileEntity(TileSolarPanel.Ultimate.class, new ResourceLocation(TechCraft.MODID, "solar_panel_ultimate"));
         GameRegistry.registerTileEntity(TileEuToFe.class, new ResourceLocation(TechCraft.MODID, "eu_to_fe_converter"));
         GameRegistry.registerTileEntity(TileFeToEu.class, new ResourceLocation(TechCraft.MODID, "fe_to_eu_converter"));
+        if (Loader.isModLoaded("mekanism")) {
+            GameRegistry.registerTileEntity(com.techcraft.tile.TileGasTank.class, new ResourceLocation(TechCraft.MODID, "gas_tank"));
+            GameRegistry.registerTileEntity(com.techcraft.tile.TileGasGenerator.class, new ResourceLocation(TechCraft.MODID, "gas_generator"));
+        }
         GameRegistry.registerTileEntity(TilePump.class, new ResourceLocation(TechCraft.MODID, "pump"));
         GameRegistry.registerTileEntity(TileGeothermalGenerator.class, new ResourceLocation(TechCraft.MODID, "geothermal_generator"));
         GameRegistry.registerTileEntity(TileWaterWheel.class, new ResourceLocation(TechCraft.MODID, "water_wheel"));

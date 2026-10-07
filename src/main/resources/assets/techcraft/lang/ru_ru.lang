@@ -25,6 +25,8 @@ tile.techcraft.block_placer.name=Установщик блоков
 tile.techcraft.mob_grinder.name=Грайндер мобов
 tile.techcraft.eu_to_fe_converter.name=Конвертер EU в FE
 tile.techcraft.fe_to_eu_converter.name=Конвертер FE в EU
+tile.techcraft.gas_tank.name=Газовый бак
+tile.techcraft.gas_generator.name=Газовый генератор
 
 item.techcraft.iron_dust.name=Железная пыль
 item.techcraft.gold_dust.name=Золотая пыль
@@ -104,3 +106,4 @@ techcraft.config.blockbreaker=Ломатель блоков
 techcraft.config.blockplacer=Установщик блоков
 techcraft.config.mobgrinder=Грайндер мобов
 techcraft.config.ic2=Конвертеры IC2
+techcraft.config.gas=Газы (Mekanism)

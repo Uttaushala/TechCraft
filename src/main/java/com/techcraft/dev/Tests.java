@@ -382,6 +382,55 @@ final class Tests {
             return c.expectEnergyAbove(c.energy(0, 0, -1), 0);
         }));
 
+        // Only runs when Mekanism is installed (the second CI server run): gas goes through Mekanism's real capability.
+        tests.add(new SelfTest.Test("mekanism-gas-tank", c -> {
+            if (net.minecraftforge.fml.common.Loader.isModLoaded("mekanism")) {
+                c.machine(ModBlocks.GAS_TANK, EnumFacing.NORTH, 0, 0, 0);
+                c.machine(ModBlocks.GAS_TANK, EnumFacing.NORTH, 1, 0, 0);
+                ((TileMachineBase) c.tile(0, 0, 0)).getSideConfig().set(SideConfig.FLUIDS, EnumFacing.EAST, FaceMode.OUTPUT);
+                mekanism.api.gas.IGasHandler handler = c.tile(0, 0, 0).getCapability(
+                        com.techcraft.compat.mekanism.GasCaps.GAS_HANDLER, EnumFacing.WEST);
+                handler.receiveGas(EnumFacing.WEST, new mekanism.api.gas.GasStack(
+                        mekanism.api.gas.GasRegistry.getGas("hydrogen"), 3000), true);
+            }
+        }, c -> {
+            if (!net.minecraftforge.fml.common.Loader.isModLoaded("mekanism")) {
+                return null;
+            }
+            mekanism.api.gas.IGasHandler first = c.tile(0, 0, 0).getCapability(
+                    com.techcraft.compat.mekanism.GasCaps.GAS_HANDLER, EnumFacing.WEST);
+            mekanism.api.gas.IGasHandler second = c.tile(1, 0, 0).getCapability(
+                    com.techcraft.compat.mekanism.GasCaps.GAS_HANDLER, EnumFacing.WEST);
+            if (first == null || second == null) {
+                return "gas tank has no Mekanism gas capability";
+            }
+            int moved = second.getTankInfo()[0].getStored();
+            int left = first.getTankInfo()[0].getStored();
+            return moved == 3000 && left == 0 ? null : "second tank holds " + moved + " mB, first still holds " + left;
+        }));
+
+        tests.add(new SelfTest.Test("mekanism-gas-generator", c -> {
+            if (net.minecraftforge.fml.common.Loader.isModLoaded("mekanism")) {
+                c.machine(ModBlocks.GAS_GENERATOR, EnumFacing.NORTH, 0, 0, 0);
+                mekanism.api.gas.IGasHandler handler = c.tile(0, 0, 0).getCapability(
+                        com.techcraft.compat.mekanism.GasCaps.GAS_HANDLER, EnumFacing.WEST);
+                handler.receiveGas(EnumFacing.WEST, new mekanism.api.gas.GasStack(
+                        mekanism.api.gas.GasRegistry.getGas("hydrogen"), 2000), true);
+            }
+        }, c -> {
+            if (!net.minecraftforge.fml.common.Loader.isModLoaded("mekanism")) {
+                return null;
+            }
+            String problem = c.expectEnergyAbove(c.energy(0, 0, 0), 0);
+            if (problem != null) {
+                return problem;
+            }
+            mekanism.api.gas.IGasHandler handler = c.tile(0, 0, 0).getCapability(
+                    com.techcraft.compat.mekanism.GasCaps.GAS_HANDLER, EnumFacing.WEST);
+            return handler.canReceiveGas(EnumFacing.WEST, mekanism.api.gas.GasRegistry.getGas("oxygen"))
+                    ? "gas generator accepted oxygen, which isn't a fuel" : null;
+        }));
+
         tests.add(new SelfTest.Test("electric-drill-needs-energy", c -> { }, c -> {
             ItemStack empty = new ItemStack(ModItems.ELECTRIC_DRILL);
             ItemStack full = ((com.techcraft.item.ItemEnergyBase) ModItems.ELECTRIC_DRILL).createFull();

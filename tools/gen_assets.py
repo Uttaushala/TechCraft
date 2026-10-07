@@ -38,6 +38,8 @@ machines = {
     "mob_grinder": ("machine_side", "machine_top", "mob_grinder_front", "mob_grinder_front_on"),
     "eu_to_fe_converter": ("machine_side", "machine_top", "eu_to_fe_converter_front", "eu_to_fe_converter_front"),
     "fe_to_eu_converter": ("machine_side", "machine_top", "fe_to_eu_converter_front", "fe_to_eu_converter_front"),
+    "gas_tank": ("gas_tank_side", "machine_top", "gas_tank_front", "gas_tank_front"),
+    "gas_generator": ("machine_side", "machine_top", "gas_generator_front", "gas_generator_front_on"),
     "solar_panel": ("machine_side", "solar_top_basic", "solar_front", "solar_front"),
     "solar_panel_advanced": ("machine_side", "solar_top_advanced", "solar_front", "solar_front"),
     "solar_panel_ultimate": ("machine_side", "solar_top_ultimate", "solar_front", "solar_front"),
@@ -125,9 +127,16 @@ recipes = {
     "magnet": (["I I", "IBI", " C "], {"I": IRON, "B": T("battery_basic"), "C": CIRCUIT}, "magnet", 1),
     "eu_to_fe_converter": (["GRG", "CMC", "GRG"], {"G": P_GOLD, "R": REDSTONE, "C": CIRCUIT, "M": FRAME}, "eu_to_fe_converter", 1),
     "fe_to_eu_converter": (["PRP", "CMC", "PRP"], {"P": P_COPPER, "R": REDSTONE, "C": CIRCUIT, "M": FRAME}, "fe_to_eu_converter", 1),
+    "gas_tank": (["PGP", "GMG", "PGP"], {"P": P_IRON, "G": GLASS, "M": FRAME}, "gas_tank", 1),
+    "gas_generator": (["IFI", "CMC", "IPI"], {"I": IRON, "F": item("minecraft:furnace"), "C": CIRCUIT, "M": FRAME, "P": P_GOLD}, "gas_generator", 1),
     "tech_wrench": (["I I", "IMI", " I "], {"I": IRON, "M": FRAME}, "tech_wrench", 1),
     "energy_meter": (["R R", "ICI", " I "], {"R": REDSTONE, "I": IRON, "C": CIRCUIT}, "energy_meter", 1),
 }
+NEEDS_MEKANISM = {"gas_tank", "gas_generator"}
 for name, (pattern, key, result, count) in recipes.items():
-    w(f"recipes/{name}.json", {"type": "forge:ore_shaped", "pattern": pattern, "key": key,
-                               "result": {"item": f"techcraft:{result}", "count": count}})
+    data = {"type": "forge:ore_shaped", "pattern": pattern, "key": key,
+            "result": {"item": f"techcraft:{result}", "count": count}}
+    if name in NEEDS_MEKANISM:
+        # These blocks only exist when Mekanism is installed.
+        data = {"conditions": [{"type": "forge:mod_loaded", "modid": "mekanism"}], **data}
+    w(f"recipes/{name}.json", data)

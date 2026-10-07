@@ -1,0 +1,31 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "PGP",
+    "GMG",
+    "PGP"
+  ],
+  "key": {
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlass"
+    },
+    "M": {
+      "item": "techcraft:machine_frame"
+    }
+  },
+  "result": {
+    "item": "techcraft:gas_tank",
+    "count": 1
+  }
+}
