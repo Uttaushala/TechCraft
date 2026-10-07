@@ -65,6 +65,12 @@ public abstract class TileMachineBase extends TileEntity implements ITickable {
             public boolean isItemValid(int slot, ItemStack stack) {
                 return bypassValidation || isItemValidForSlot(slot, stack);
             }
+
+            /** This Forge version's handler doesn't check validity itself, so hoppers could insert anything. */
+            @Override
+            public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+                return isItemValid(slot, stack) ? super.insertItem(slot, stack, simulate) : stack;
+            }
         };
         this.upgrades = new ItemStackHandler(getUpgradeSlotCount()) {
             @Override

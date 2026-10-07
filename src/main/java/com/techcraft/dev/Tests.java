@@ -206,13 +206,21 @@ final class Tests {
 
         tests.add(new SelfTest.Test("water-wheel", c -> {
             c.machine(ModBlocks.WATER_WHEEL, EnumFacing.NORTH, 0, 0, 0);
-            c.place(Blocks.WATER, 1, 3, 0);
+            c.place(Blocks.FLOWING_WATER, 1, 3, 0);
         }, c -> c.expectEnergyAbove(c.energy(0, 0, 0), 0)));
 
         tests.add(new SelfTest.Test("biomass-generator", c -> {
             c.machine(ModBlocks.BIOMASS_GENERATOR, EnumFacing.NORTH, 0, 0, 0);
             c.items(0, 0, 0).setStackInSlot(0, new ItemStack(Items.WHEAT, 4));
         }, c -> c.expectEnergyAbove(c.energy(0, 0, 0), 0)));
+
+        tests.add(new SelfTest.Test("furnace-input-rejects-junk", c -> c.machine(ModBlocks.ELECTRIC_FURNACE, EnumFacing.NORTH, 0, 0, 0), c -> {
+            net.minecraftforge.items.IItemHandler side = c.tile(0, 0, 0).getCapability(
+                    net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+            boolean junk = side.insertItem(0, new ItemStack(Items.STICK, 1), true).isEmpty();
+            boolean dust = side.insertItem(0, new ItemStack(ModItems.IRON_DUST, 1), true).isEmpty();
+            return !junk && dust ? null : "junk accepted: " + junk + ", iron dust accepted: " + dust;
+        }));
 
         tests.add(new SelfTest.Test("biomass-rejects-meat", c -> c.machine(ModBlocks.BIOMASS_GENERATOR, EnumFacing.NORTH, 0, 0, 0), c -> {
             net.minecraftforge.items.IItemHandler inv = c.items(0, 0, 0);
@@ -256,6 +264,7 @@ final class Tests {
             c.energy(0, 0, 0).receiveEnergy(50000, false);
             net.minecraft.entity.passive.EntityCow cow = new net.minecraft.entity.passive.EntityCow(c.world());
             BlockPos at = c.at(3, 0, 0);
+            cow.setNoAI(true);
             cow.setPosition(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
             c.world().spawnEntity(cow);
         }, c -> {

@@ -40,7 +40,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: techcraft-mod
-          path: build/libs/*.jar
+          path: |
+            build/libs/*.jar
+            !build/libs/*-sources.jar
 
       # Starts a real Forge server with the mod and runs the in-game self-test (see SelfTest.java).
       - name: Smoke test on a dedicated server
@@ -50,7 +52,7 @@ jobs:
           java -jar "forge-$FORGE-installer.jar" --installServer > installer.log 2>&1 || { tail -50 installer.log; exit 1; }
           echo eula=true > eula.txt
           printf 'online-mode=false\nlevel-type=FLAT\ngenerate-structures=false\nspawn-monsters=false\nview-distance=4\n' > server.properties
-          mkdir mods && cp ../build/libs/techcraft-*.jar mods/
+          mkdir mods && cp $(ls ../build/libs/techcraft-*.jar | grep -v -- -sources) mods/
           set +e
           timeout 900 java -Xmx2G -Dtechcraft.selftest=true -jar "forge-$FORGE-universal.jar" nogui > server.log 2>&1
           set -e
