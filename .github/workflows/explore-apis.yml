@@ -1,6 +1,6 @@
 name: Explore third-party APIs
 
-# Temporary: prints the Mekanism 9.8.3.390 gas API sources so the integration can be written against them.
+# Temporary: finds the Mekanism 9.8.3.390 jar so the gas integration can be tested against the real mod.
 on:
   push:
     branches: [claude/minecraft-mod-mro3ht]
@@ -11,20 +11,26 @@ jobs:
   explore:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch the API sources
+      - name: Release assets
         run: |
-          mkdir -p /tmp/mek && cd /tmp/mek
-          curl -sfL -o mek.zip https://codeload.github.com/mekanism/Mekanism/zip/refs/tags/9.8.3.390
-          unzip -q mek.zip "Mekanism-9.8.3.390/src/main/java/mekanism/api/*"
-          cd Mekanism-9.8.3.390/src/main/java/mekanism/api
-          echo "== api tree"; find . -maxdepth 1 | sort; ls gas
-          for f in gas/Gas.java gas/GasStack.java gas/GasRegistry.java gas/GasTankInfo.java gas/GasTank.java gas/ITubeConnection.java; do
-            echo "=== $f"; grep -vE '^\s*(\*|/\*|//)' "$f" | grep -vE '^\s*$' | head -90
+          for tag in 9.8.3.390 v9.8.3.390 1.12.2-9.8.3.390; do
+            echo "== tag $tag"
+            curl -s "https://api.github.com/repos/mekanism/Mekanism/releases/tags/$tag" | grep -E '"(name|browser_download_url|message)"' | head -12
           done
-          echo "== imports used by gas package"; grep -h "^import mekanism" gas/*.java | sort -u
-          echo "== capability and CapabilityInject"; grep -rn "CapabilityInject\|GAS_HANDLER" /tmp/mek --include=*.java | head
-      - name: Where is the gas capability?
+          echo "== direct downloads"
+          for u in \
+            https://github.com/mekanism/Mekanism/releases/download/9.8.3.390/Mekanism-1.12.2-9.8.3.390.jar \
+            https://github.com/mekanism/Mekanism/releases/download/9.8.3.390/MekanismGenerators-1.12.2-9.8.3.390.jar \
+            https://github.com/mekanism/Mekanism/releases/download/v9.8.3.390/Mekanism-1.12.2-9.8.3.390.jar; do
+            echo "$(curl -s -o /dev/null -w '%{http_code}' -L "$u") $u"
+          done
+      - name: Other mirrors
         run: |
-          curl -s "https://raw.githubusercontent.com/mekanism/Mekanism/9.8.3.390/src/main/java/mekanism/common/capabilities/Capabilities.java" | grep -v '^\s*\*\|^\s*/\*\|^$' | head -40
-          echo "== gas fuel values in Mekanism Generators"
-          curl -s "https://raw.githubusercontent.com/mekanism/Mekanism/9.8.3.390/src/generators/java/mekanism/generators/common/FuelHandler.java" | head -80
+          for u in \
+            https://www.curseforge.com/api/v1/mods/268560/files/2835174/download \
+            https://edge.forgecdn.net/files/2835/174/Mekanism-1.12.2-9.8.3.390.jar \
+            https://mediafilez.forgecdn.net/files/2835/174/Mekanism-1.12.2-9.8.3.390.jar \
+            https://cdn.modrinth.com/data/Ud1nxSnC/versions/ ; do
+            echo "$(curl -s -o /dev/null -w '%{http_code}' -L "$u") $u"
+          done
+          curl -s "https://api.modrinth.com/v2/search?query=mekanism&facets=%5B%5B%22versions:1.12.2%22%5D%5D" | head -c 600
