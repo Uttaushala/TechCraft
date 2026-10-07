@@ -1,5 +1,6 @@
 package com.techcraft;
 
+import com.techcraft.dev.SelfTest;
 import com.techcraft.init.ModBlocks;
 import com.techcraft.init.ModItems;
 import com.techcraft.inventory.GuiHandler;
@@ -11,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
@@ -38,6 +40,7 @@ public class TechCraft {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+        SelfTest.registerTestOres();
 
         OreDictionary.registerOre("dustIron", ModItems.IRON_DUST);
         OreDictionary.registerOre("dustGold", ModItems.GOLD_DUST);
@@ -55,5 +58,12 @@ public class TechCraft {
         CrusherRecipes.init();
         CompressorRecipes.init();
         AlloyRecipes.init();
+    }
+
+    @Mod.EventHandler
+    public void serverStarted(FMLServerStartedEvent event) {
+        if (SelfTest.enabled()) {
+            SelfTest.start();
+        }
     }
 }
