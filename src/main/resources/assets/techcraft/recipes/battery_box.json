@@ -1,0 +1,28 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "ICI",
+    "RMR",
+    "IRI"
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "M": {
+      "item": "techcraft:machine_frame"
+    },
+    "R": {
+      "type": "forge:ore_dict",
+      "ore": "blockRedstone"
+    }
+  },
+  "result": {
+    "item": "techcraft:battery_box",
+    "count": 1
+  }
+}

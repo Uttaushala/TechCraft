@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    " R ",
+    "IGI",
+    " R "
+  ],
+  "key": {
+    "R": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetGold"
+    }
+  },
+  "result": {
+    "item": "techcraft:circuit",
+    "count": 2
+  }
+}

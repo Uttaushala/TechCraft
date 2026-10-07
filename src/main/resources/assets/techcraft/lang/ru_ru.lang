@@ -1,0 +1,19 @@
+itemGroup.techcraft=TechCraft
+
+tile.techcraft.coal_generator.name=Угольный генератор
+tile.techcraft.electric_furnace.name=Электропечь
+tile.techcraft.crusher.name=Дробитель
+tile.techcraft.battery_box.name=Аккумуляторный блок
+
+item.techcraft.iron_dust.name=Железная пыль
+item.techcraft.gold_dust.name=Золотая пыль
+item.techcraft.circuit.name=Простая схема
+item.techcraft.machine_frame.name=Каркас машины
+
+gui.techcraft.stored=Запасено энергии:
+gui.techcraft.output_front=Отдаёт энергию лицевой стороной
+
+techcraft.config.generator=Угольный генератор
+techcraft.config.electricfurnace=Электропечь
+techcraft.config.crusher=Дробитель
+techcraft.config.batterybox=Аккумуляторный блок

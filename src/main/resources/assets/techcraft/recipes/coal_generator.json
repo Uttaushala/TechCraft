@@ -1,0 +1,27 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "ICI",
+    "IMI",
+    "IFI"
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "M": {
+      "item": "techcraft:machine_frame"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "result": {
+    "item": "techcraft:coal_generator",
+    "count": 1
+  }
+}

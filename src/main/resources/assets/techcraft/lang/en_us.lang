@@ -1,0 +1,19 @@
+itemGroup.techcraft=TechCraft
+
+tile.techcraft.coal_generator.name=Coal Generator
+tile.techcraft.electric_furnace.name=Electric Furnace
+tile.techcraft.crusher.name=Crusher
+tile.techcraft.battery_box.name=Battery Box
+
+item.techcraft.iron_dust.name=Iron Dust
+item.techcraft.gold_dust.name=Gold Dust
+item.techcraft.circuit.name=Basic Circuit
+item.techcraft.machine_frame.name=Machine Frame
+
+gui.techcraft.stored=Stored energy:
+gui.techcraft.output_front=Outputs through the front
+
+techcraft.config.generator=Coal Generator
+techcraft.config.electricfurnace=Electric Furnace
+techcraft.config.crusher=Crusher
+techcraft.config.batterybox=Battery Box

@@ -1,0 +1,15 @@
+[
+  {
+    "modid": "techcraft",
+    "name": "TechCraft",
+    "description": "Energy and machines: coal generator, electric furnace, crusher and battery box. Uses Forge Energy (FE/RF).",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/uttaushala/techcraft",
+    "authorList": ["uttaushala"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "ICI",
+    "FMF",
+    "IRI"
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "M": {
+      "item": "techcraft:machine_frame"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "R": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    }
+  },
+  "result": {
+    "item": "techcraft:electric_furnace",
+    "count": 1
+  }
+}
