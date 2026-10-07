@@ -1,0 +1,31 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "IPI",
+    "CMC",
+    "ILI"
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "M": {
+      "item": "techcraft:machine_frame"
+    },
+    "L": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    }
+  },
+  "result": {
+    "item": "techcraft:compressor",
+    "count": 1
+  }
+}

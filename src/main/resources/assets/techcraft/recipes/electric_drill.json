@@ -1,0 +1,32 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "PDP",
+    "ICI",
+    " B "
+  ],
+  "key": {
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "B": {
+      "item": "techcraft:battery_advanced"
+    }
+  },
+  "result": {
+    "item": "techcraft:electric_drill",
+    "count": 1
+  }
+}

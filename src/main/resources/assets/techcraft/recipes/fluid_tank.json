@@ -1,0 +1,25 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "GPG",
+    "GMG",
+    "GPG"
+  ],
+  "key": {
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlass"
+    },
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "M": {
+      "item": "techcraft:machine_frame"
+    }
+  },
+  "result": {
+    "item": "techcraft:fluid_tank",
+    "count": 1
+  }
+}

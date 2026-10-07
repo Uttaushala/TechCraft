@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "active=false,facing=north": {
+      "model": "techcraft:compressor"
+    },
+    "active=true,facing=north": {
+      "model": "techcraft:compressor_on"
+    },
+    "active=false,facing=east": {
+      "model": "techcraft:compressor",
+      "y": 90
+    },
+    "active=true,facing=east": {
+      "model": "techcraft:compressor_on",
+      "y": 90
+    },
+    "active=false,facing=south": {
+      "model": "techcraft:compressor",
+      "y": 180
+    },
+    "active=true,facing=south": {
+      "model": "techcraft:compressor_on",
+      "y": 180
+    },
+    "active=false,facing=west": {
+      "model": "techcraft:compressor",
+      "y": 270
+    },
+    "active=true,facing=west": {
+      "model": "techcraft:compressor_on",
+      "y": 270
+    }
+  }
+}

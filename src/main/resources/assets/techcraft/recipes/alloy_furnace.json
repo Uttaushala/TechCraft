@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "BFB",
+    "FMF",
+    "BCB"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:brick"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "M": {
+      "item": "techcraft:machine_frame"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    }
+  },
+  "result": {
+    "item": "techcraft:alloy_furnace",
+    "count": 1
+  }
+}

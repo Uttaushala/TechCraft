@@ -1,0 +1,28 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "GCG",
+    "RMR",
+    "GRG"
+  ],
+  "key": {
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "plateGold"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "R": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    },
+    "M": {
+      "item": "techcraft:machine_frame"
+    }
+  },
+  "result": {
+    "item": "techcraft:charger",
+    "count": 1
+  }
+}

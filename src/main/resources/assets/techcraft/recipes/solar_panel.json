@@ -1,0 +1,32 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "GGG",
+    "CLC",
+    "IMI"
+  ],
+  "key": {
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlass"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "L": {
+      "item": "minecraft:dye",
+      "data": 4
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "M": {
+      "item": "techcraft:machine_frame"
+    }
+  },
+  "result": {
+    "item": "techcraft:solar_panel",
+    "count": 1
+  }
+}

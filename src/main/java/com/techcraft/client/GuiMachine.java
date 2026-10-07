@@ -1,16 +1,27 @@
 package com.techcraft.client;
 
 import com.techcraft.inventory.ContainerMachine;
+import com.techcraft.tile.TileAlloyFurnace;
 import com.techcraft.tile.TileBatteryBox;
+import com.techcraft.tile.TileCharger;
 import com.techcraft.tile.TileCoalGenerator;
+import com.techcraft.tile.TileFluidBase;
+import com.techcraft.tile.TileFluidTank;
 import com.techcraft.tile.TileMachineBase;
 import com.techcraft.tile.TileProcessor;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Slot;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /** Machine screen drawn entirely in code, in the vanilla style. */
 public class GuiMachine extends GuiContainer {
@@ -28,13 +39,29 @@ public class GuiMachine extends GuiContainer {
 
     private final ContainerMachine container;
     private final TileMachineBase tile;
+    private final TileFluidBase fluidTile;
+    private final boolean bigTank;
 
     public GuiMachine(ContainerMachine container) {
         super(container);
         this.container = container;
         this.tile = container.getTile();
+        this.fluidTile = tile instanceof TileFluidBase ? (TileFluidBase) tile : null;
+        this.bigTank = tile instanceof TileFluidTank;
         this.xSize = 176;
         this.ySize = 166;
+    }
+
+    private boolean hasEnergyBar() {
+        return container.getField(TileMachineBase.FIELD_CAPACITY) > 0;
+    }
+
+    private int fluidX() {
+        return bigTank ? 62 : 34;
+    }
+
+    private int fluidW() {
+        return bigTank ? 52 : BAR_W;
     }
 
     @Override
@@ -45,8 +72,11 @@ public class GuiMachine extends GuiContainer {
 
         int x = mouseX - guiLeft;
         int y = mouseY - guiTop;
-        if (x >= BAR_X && x < BAR_X + BAR_W && y >= BAR_Y && y < BAR_Y + BAR_H) {
+        if (hasEnergyBar() && x >= BAR_X && x < BAR_X + BAR_W && y >= BAR_Y && y < BAR_Y + BAR_H) {
             drawHoveringText(Collections.singletonList(energyText()), mouseX, mouseY);
+        }
+        if (fluidTile != null && x >= fluidX() && x < fluidX() + fluidW() && y >= BAR_Y && y < BAR_Y + BAR_H) {
+            drawHoveringText(fluidText(), mouseX, mouseY);
         }
     }
 
@@ -68,12 +98,18 @@ public class GuiMachine extends GuiContainer {
         }
 
         // Energy bar
-        drawInset(left + BAR_X - 1, top + BAR_Y - 1, BAR_W + 2, BAR_H + 2, 0xFF2B2B2B);
-        int filled = scaled(container.getField(TileMachineBase.FIELD_ENERGY),
-                container.getField(TileMachineBase.FIELD_CAPACITY), BAR_H);
-        if (filled > 0) {
-            drawGradientRect(left + BAR_X, top + BAR_Y + BAR_H - filled, left + BAR_X + BAR_W, top + BAR_Y + BAR_H,
-                    0xFFFF5040, 0xFFA01010);
+        if (hasEnergyBar()) {
+            drawInset(left + BAR_X - 1, top + BAR_Y - 1, BAR_W + 2, BAR_H + 2, 0xFF2B2B2B);
+            int filled = scaled(container.getField(TileMachineBase.FIELD_ENERGY),
+                    container.getField(TileMachineBase.FIELD_CAPACITY), BAR_H);
+            if (filled > 0) {
+                drawGradientRect(left + BAR_X, top + BAR_Y + BAR_H - filled, left + BAR_X + BAR_W, top + BAR_Y + BAR_H,
+                        0xFFFF5040, 0xFFA01010);
+            }
+        }
+
+        if (fluidTile != null) {
+            drawFluidBar(left + fluidX(), top + BAR_Y, fluidW(), BAR_H);
         }
 
         int progress = container.getField(TileMachineBase.FIELD_PROGRESS);
@@ -88,7 +124,7 @@ public class GuiMachine extends GuiContainer {
             if (flame > 0) {
                 drawGradientRect(fx, fy + 14 - flame, fx + 14, fy + 14, 0xFFFFD040, 0xFFE04000);
             }
-        } else if (tile instanceof TileProcessor) {
+        } else if (tile instanceof TileProcessor || tile instanceof TileAlloyFurnace) {
             // Progress arrow between input and output.
             int ax = left + 80;
             int ay = top + 39;
@@ -100,11 +136,55 @@ public class GuiMachine extends GuiContainer {
         }
     }
 
+    private void drawFluidBar(int x, int y, int w, int h) {
+        drawInset(x - 1, y - 1, w + 2, h + 2, 0xFF2B2B2B);
+        FluidTank tank = fluidTile.getTank();
+        FluidStack stack = tank.getFluid();
+        if (stack == null || stack.amount <= 0 || tank.getCapacity() <= 0) {
+            return;
+        }
+        int filled = scaled(stack.amount, tank.getCapacity(), h);
+        Fluid fluid = stack.getFluid();
+        TextureAtlasSprite sprite = mc.getTextureMapBlocks().getAtlasSprite(fluid.getStill(stack).toString());
+        int color = fluid.getColor(stack);
+        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        GlStateManager.color(((color >> 16) & 0xFF) / 255.0F, ((color >> 8) & 0xFF) / 255.0F,
+                (color & 0xFF) / 255.0F, 1.0F);
+        for (int dy = 0; dy < filled; dy += 16) {
+            int th = Math.min(16, filled - dy);
+            for (int dx = 0; dx < w; dx += 16) {
+                drawTexturedModalRect(x + dx, y + h - dy - th, sprite, Math.min(16, w - dx), th);
+            }
+        }
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         String title = I18n.format(tile.getBlockType().getTranslationKey() + ".name");
         fontRenderer.drawString(title, (xSize - fontRenderer.getStringWidth(title)) / 2, 6, COLOR_TEXT);
         fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 94, COLOR_TEXT);
+
+        int sign = tile.getRateSign();
+        if (sign != 0) {
+            int rate = container.getField(TileMachineBase.FIELD_RATE);
+            String text = (sign > 0 ? "+" : "-") + rate + " FE/t";
+            int x = 34;
+            int y = 24;
+            if (tile instanceof TileAlloyFurnace) {
+                x = 74;
+                y = 58;
+            } else if (tile instanceof TileProcessor) {
+                x = 62;
+                y = 58;
+            } else if (tile instanceof TileCharger) {
+                x = 104;
+                y = 40;
+            } else if (fluidTile != null) {
+                x = 56;
+            }
+            fontRenderer.drawString(text, x, y, rate > 0 ? 0x207020 : 0x707070);
+        }
 
         if (tile instanceof TileBatteryBox) {
             int energy = container.getField(TileMachineBase.FIELD_ENERGY);
@@ -121,6 +201,19 @@ public class GuiMachine extends GuiContainer {
         return String.format("%,d / %,d FE",
                 container.getField(TileMachineBase.FIELD_ENERGY),
                 container.getField(TileMachineBase.FIELD_CAPACITY));
+    }
+
+    private List<String> fluidText() {
+        List<String> lines = new ArrayList<>();
+        FluidTank tank = fluidTile.getTank();
+        FluidStack stack = tank.getFluid();
+        if (stack == null || stack.amount <= 0) {
+            lines.add(I18n.format("gui.techcraft.empty"));
+        } else {
+            lines.add(stack.getLocalizedName());
+        }
+        lines.add(String.format("%,d / %,d mB", stack == null ? 0 : stack.amount, tank.getCapacity()));
+        return lines;
     }
 
     /** Recessed box: dark top-left edge, light bottom-right edge. */

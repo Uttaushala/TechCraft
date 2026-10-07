@@ -52,6 +52,7 @@ public abstract class TileProcessor extends TileMachineBase {
             progress = 0;
             markDirty();
         }
+        rate = working ? config.energyPerTick : 0;
         updateActive(working);
     }
 
@@ -79,6 +80,11 @@ public abstract class TileProcessor extends TileMachineBase {
     @Override
     public int getInputSlotCount() {
         return 1;
+    }
+
+    @Override
+    public int getRateSign() {
+        return -1;
     }
 
     @Override

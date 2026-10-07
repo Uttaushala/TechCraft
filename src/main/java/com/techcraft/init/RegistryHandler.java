@@ -1,10 +1,17 @@
 package com.techcraft.init;
 
 import com.techcraft.TechCraft;
+import com.techcraft.tile.TileAlloyFurnace;
 import com.techcraft.tile.TileBatteryBox;
+import com.techcraft.tile.TileCharger;
 import com.techcraft.tile.TileCoalGenerator;
+import com.techcraft.tile.TileCompressor;
 import com.techcraft.tile.TileCrusher;
 import com.techcraft.tile.TileElectricFurnace;
+import com.techcraft.tile.TileFluidTank;
+import com.techcraft.tile.TileLavaGenerator;
+import com.techcraft.tile.TileSolarPanel;
+import com.techcraft.tile.TileWindTurbine;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -23,6 +30,17 @@ public final class RegistryHandler {
         GameRegistry.registerTileEntity(TileElectricFurnace.class, new ResourceLocation(TechCraft.MODID, "electric_furnace"));
         GameRegistry.registerTileEntity(TileCrusher.class, new ResourceLocation(TechCraft.MODID, "crusher"));
         GameRegistry.registerTileEntity(TileBatteryBox.class, new ResourceLocation(TechCraft.MODID, "battery_box"));
+        GameRegistry.registerTileEntity(TileBatteryBox.Advanced.class, new ResourceLocation(TechCraft.MODID, "battery_box_advanced"));
+        GameRegistry.registerTileEntity(TileBatteryBox.Ultimate.class, new ResourceLocation(TechCraft.MODID, "battery_box_ultimate"));
+        GameRegistry.registerTileEntity(TileCompressor.class, new ResourceLocation(TechCraft.MODID, "compressor"));
+        GameRegistry.registerTileEntity(TileAlloyFurnace.class, new ResourceLocation(TechCraft.MODID, "alloy_furnace"));
+        GameRegistry.registerTileEntity(TileCharger.class, new ResourceLocation(TechCraft.MODID, "charger"));
+        GameRegistry.registerTileEntity(TileLavaGenerator.class, new ResourceLocation(TechCraft.MODID, "lava_generator"));
+        GameRegistry.registerTileEntity(TileFluidTank.class, new ResourceLocation(TechCraft.MODID, "fluid_tank"));
+        GameRegistry.registerTileEntity(TileWindTurbine.class, new ResourceLocation(TechCraft.MODID, "wind_turbine"));
+        GameRegistry.registerTileEntity(TileSolarPanel.Basic.class, new ResourceLocation(TechCraft.MODID, "solar_panel"));
+        GameRegistry.registerTileEntity(TileSolarPanel.Advanced.class, new ResourceLocation(TechCraft.MODID, "solar_panel_advanced"));
+        GameRegistry.registerTileEntity(TileSolarPanel.Ultimate.class, new ResourceLocation(TechCraft.MODID, "solar_panel_ultimate"));
     }
 
     @SubscribeEvent

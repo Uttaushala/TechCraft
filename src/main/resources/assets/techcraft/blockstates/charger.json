@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "active=false,facing=north": {
+      "model": "techcraft:charger"
+    },
+    "active=true,facing=north": {
+      "model": "techcraft:charger_on"
+    },
+    "active=false,facing=east": {
+      "model": "techcraft:charger",
+      "y": 90
+    },
+    "active=true,facing=east": {
+      "model": "techcraft:charger_on",
+      "y": 90
+    },
+    "active=false,facing=south": {
+      "model": "techcraft:charger",
+      "y": 180
+    },
+    "active=true,facing=south": {
+      "model": "techcraft:charger_on",
+      "y": 180
+    },
+    "active=false,facing=west": {
+      "model": "techcraft:charger",
+      "y": 270
+    },
+    "active=true,facing=west": {
+      "model": "techcraft:charger_on",
+      "y": 270
+    }
+  }
+}

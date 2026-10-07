@@ -1,0 +1,31 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "SSS",
+    "CMC",
+    "GRG"
+  ],
+  "key": {
+    "S": {
+      "item": "techcraft:solar_panel"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "M": {
+      "item": "techcraft:machine_frame"
+    },
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "plateGold"
+    },
+    "R": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    }
+  },
+  "result": {
+    "item": "techcraft:solar_panel_advanced",
+    "count": 1
+  }
+}

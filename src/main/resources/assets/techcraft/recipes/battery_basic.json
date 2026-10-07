@@ -1,0 +1,25 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    " C ",
+    "PRP",
+    "PRP"
+  ],
+  "key": {
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "R": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    }
+  },
+  "result": {
+    "item": "techcraft:battery_basic",
+    "count": 1
+  }
+}

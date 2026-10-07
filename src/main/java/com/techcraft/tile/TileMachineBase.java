@@ -28,7 +28,8 @@ public abstract class TileMachineBase extends TileEntity implements ITickable {
     public static final int FIELD_CAPACITY = 1;
     public static final int FIELD_PROGRESS = 2;
     public static final int FIELD_PROGRESS_MAX = 3;
-    public static final int FIELD_COUNT = 4;
+    public static final int FIELD_RATE = 4;
+    public static final int FIELD_COUNT = 5;
 
     /** Keeps the "active" look for a moment so the block does not flicker when energy is tight. */
     private static final int ACTIVE_COOLDOWN = 20;
@@ -37,6 +38,8 @@ public abstract class TileMachineBase extends TileEntity implements ITickable {
     protected final ItemStackHandler inventory;
     private final IItemHandler automationInventory;
     private int activeTicks;
+    /** FE per tick produced or used right now, shown in the GUI. */
+    protected int rate;
 
     protected TileMachineBase(int slots, int inputSlots, int capacity, int maxReceive, int maxExtract) {
         this.energy = new TechEnergyStorage(capacity, maxReceive, maxExtract, this::markDirty);
@@ -64,6 +67,16 @@ public abstract class TileMachineBase extends TileEntity implements ITickable {
     public abstract List<Slot> createSlots();
 
     public abstract int getInputSlotCount();
+
+    /** +1 for generators, -1 for consumers, 0 when the GUI should not show a rate. */
+    public int getRateSign() {
+        return 0;
+    }
+
+    /** Machines without an energy buffer (e.g. the fluid tank) don't advertise the energy capability. */
+    protected boolean hasEnergy() {
+        return true;
+    }
 
     protected int getProgress() {
         return 0;
@@ -103,6 +116,8 @@ public abstract class TileMachineBase extends TileEntity implements ITickable {
                 return getProgress();
             case FIELD_PROGRESS_MAX:
                 return getProgressMax();
+            case FIELD_RATE:
+                return rate;
             default:
                 return 0;
         }
@@ -166,7 +181,7 @@ public abstract class TileMachineBase extends TileEntity implements ITickable {
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityEnergy.ENERGY) {
-            return true;
+            return hasEnergy();
         }
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory.getSlots() > 0) {
             return true;
@@ -177,7 +192,7 @@ public abstract class TileMachineBase extends TileEntity implements ITickable {
     @Override
     @Nullable
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY) {
+        if (capability == CapabilityEnergy.ENERGY && hasEnergy()) {
             return CapabilityEnergy.ENERGY.cast(getEnergyCapability(facing));
         }
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory.getSlots() > 0) {

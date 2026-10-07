@@ -1,0 +1,27 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "PCP",
+    "BXB",
+    "PCP"
+  ],
+  "key": {
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "plateGold"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "B": {
+      "item": "techcraft:battery_advanced"
+    },
+    "X": {
+      "item": "techcraft:battery_box"
+    }
+  },
+  "result": {
+    "item": "techcraft:battery_box_advanced",
+    "count": 1
+  }
+}

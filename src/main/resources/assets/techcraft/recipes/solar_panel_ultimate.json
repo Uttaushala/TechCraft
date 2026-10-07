@@ -1,0 +1,31 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "AAA",
+    "CMC",
+    "DGD"
+  ],
+  "key": {
+    "A": {
+      "item": "techcraft:solar_panel_advanced"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "M": {
+      "item": "techcraft:machine_frame"
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    },
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "plateGold"
+    }
+  },
+  "result": {
+    "item": "techcraft:solar_panel_ultimate",
+    "count": 1
+  }
+}

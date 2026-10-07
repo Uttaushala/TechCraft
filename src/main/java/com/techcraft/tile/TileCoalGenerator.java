@@ -46,6 +46,7 @@ public class TileCoalGenerator extends TileMachineBase {
             energy.generate(ModConfig.generator.energyPerTick);
             burning = true;
         }
+        rate = burning ? ModConfig.generator.energyPerTick : 0;
         updateActive(burning);
 
         pushEnergy(ModConfig.generator.maxOutput, EnumFacing.VALUES);
@@ -68,6 +69,11 @@ public class TileCoalGenerator extends TileMachineBase {
 
     @Override
     public int getInputSlotCount() {
+        return 1;
+    }
+
+    @Override
+    public int getRateSign() {
         return 1;
     }
 

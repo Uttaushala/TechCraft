@@ -1,19 +1,67 @@
 itemGroup.techcraft=TechCraft
 
 tile.techcraft.coal_generator.name=Coal Generator
+tile.techcraft.lava_generator.name=Lava Generator
+tile.techcraft.solar_panel.name=Solar Panel
+tile.techcraft.solar_panel_advanced.name=Advanced Solar Panel
+tile.techcraft.solar_panel_ultimate.name=Ultimate Solar Panel
+tile.techcraft.wind_turbine.name=Wind Turbine
 tile.techcraft.electric_furnace.name=Electric Furnace
 tile.techcraft.crusher.name=Crusher
+tile.techcraft.compressor.name=Compressor
+tile.techcraft.alloy_furnace.name=Alloy Furnace
+tile.techcraft.charger.name=Charger
 tile.techcraft.battery_box.name=Battery Box
+tile.techcraft.battery_box_advanced.name=Advanced Battery Box
+tile.techcraft.battery_box_ultimate.name=Ultimate Battery Box
+tile.techcraft.fluid_tank.name=Fluid Tank
 
 item.techcraft.iron_dust.name=Iron Dust
 item.techcraft.gold_dust.name=Gold Dust
 item.techcraft.circuit.name=Basic Circuit
 item.techcraft.machine_frame.name=Machine Frame
+item.techcraft.plate_iron.name=Iron Plate
+item.techcraft.plate_gold.name=Gold Plate
+item.techcraft.plate_copper.name=Copper Plate
+item.techcraft.plate_tin.name=Tin Plate
+item.techcraft.plate_lead.name=Lead Plate
+item.techcraft.plate_silver.name=Silver Plate
+item.techcraft.plate_bronze.name=Bronze Plate
+item.techcraft.plate_steel.name=Steel Plate
+item.techcraft.battery_basic.name=Battery
+item.techcraft.battery_advanced.name=Advanced Battery
+item.techcraft.battery_ultimate.name=Ultimate Battery
+item.techcraft.electric_drill.name=Electric Drill
+item.techcraft.chainsaw.name=Chainsaw
+item.techcraft.tech_wrench.name=Tech Wrench
+item.techcraft.energy_meter.name=Energy Meter
 
 gui.techcraft.stored=Stored energy:
 gui.techcraft.output_front=Outputs through the front
+gui.techcraft.empty=Empty
+
+tooltip.techcraft.energy=Energy: %s / %s FE
+
+msg.techcraft.meter.none=No energy or fluid storage here
+msg.techcraft.meter.energy=Energy: %s / %s FE
+msg.techcraft.meter.face=Face %s: %s
+msg.techcraft.meter.mode.in=accepts energy
+msg.techcraft.meter.mode.out=gives energy
+msg.techcraft.meter.mode.both=accepts and gives energy
+msg.techcraft.meter.mode.none=no energy transfer
+msg.techcraft.meter.fluid=Fluid: %s, %s / %s mB
 
 techcraft.config.generator=Coal Generator
 techcraft.config.electricfurnace=Electric Furnace
 techcraft.config.crusher=Crusher
 techcraft.config.batterybox=Battery Box
+techcraft.config.batteryboxadvanced=Advanced Battery Box
+techcraft.config.batteryboxultimate=Ultimate Battery Box
+techcraft.config.compressor=Compressor
+techcraft.config.alloyfurnace=Alloy Furnace
+techcraft.config.charger=Charger
+techcraft.config.solar=Solar Panels
+techcraft.config.windturbine=Wind Turbine
+techcraft.config.lavagenerator=Lava Generator
+techcraft.config.fluidtank=Fluid Tank
+techcraft.config.equipment=Batteries and Tools

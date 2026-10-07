@@ -1,0 +1,25 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "R R",
+    "ICI",
+    " I "
+  ],
+  "key": {
+    "R": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    }
+  },
+  "result": {
+    "item": "techcraft:energy_meter",
+    "count": 1
+  }
+}

@@ -23,6 +23,7 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.function.Supplier;
@@ -32,6 +33,7 @@ public class BlockMachine extends Block implements ITileEntityProvider {
     public static final PropertyBool ACTIVE = PropertyBool.create("active");
 
     private final Supplier<TileMachineBase> tileFactory;
+    private boolean lightWhenActive = true;
 
     public BlockMachine(String name, Supplier<TileMachineBase> tileFactory) {
         super(Material.IRON);
@@ -46,6 +48,12 @@ public class BlockMachine extends Block implements ITileEntityProvider {
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
     }
 
+    /** For machines whose "active" state shouldn't make them glow (solar panels, wind turbines). */
+    public BlockMachine noActiveLight() {
+        this.lightWhenActive = false;
+        return this;
+    }
+
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return tileFactory.get();
@@ -56,6 +64,9 @@ public class BlockMachine extends Block implements ITileEntityProvider {
                                     EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (player.isSneaking()) {
             return false;
+        }
+        if (FluidUtil.interactWithFluidHandler(player, hand, world, pos, facing)) {
+            return true;
         }
         if (!world.isRemote && world.getTileEntity(pos) instanceof TileMachineBase) {
             player.openGui(TechCraft.instance, GuiHandler.MACHINE_GUI, world, pos.getX(), pos.getY(), pos.getZ());
@@ -86,7 +97,7 @@ public class BlockMachine extends Block implements ITileEntityProvider {
 
     @Override
     public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return state.getValue(ACTIVE) ? 13 : 0;
+        return lightWhenActive && state.getValue(ACTIVE) ? 13 : 0;
     }
 
     @Override

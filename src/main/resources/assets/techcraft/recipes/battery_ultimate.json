@@ -1,0 +1,28 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "DCD",
+    "BBB",
+    "DRD"
+  ],
+  "key": {
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    },
+    "B": {
+      "item": "techcraft:battery_advanced"
+    },
+    "R": {
+      "type": "forge:ore_dict",
+      "ore": "blockRedstone"
+    }
+  },
+  "result": {
+    "item": "techcraft:battery_ultimate",
+    "count": 1
+  }
+}

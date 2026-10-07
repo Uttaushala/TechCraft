@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "techcraft:blocks/solar_top_ultimate",
+    "front": "techcraft:blocks/solar_front",
+    "side": "techcraft:blocks/machine_side"
+  }
+}

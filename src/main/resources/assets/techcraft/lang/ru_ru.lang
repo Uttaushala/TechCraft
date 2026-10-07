@@ -1,19 +1,67 @@
 itemGroup.techcraft=TechCraft
 
 tile.techcraft.coal_generator.name=Угольный генератор
+tile.techcraft.lava_generator.name=Лавовый генератор
+tile.techcraft.solar_panel.name=Солнечная панель
+tile.techcraft.solar_panel_advanced.name=Улучшенная солнечная панель
+tile.techcraft.solar_panel_ultimate.name=Совершенная солнечная панель
+tile.techcraft.wind_turbine.name=Ветрогенератор
 tile.techcraft.electric_furnace.name=Электропечь
 tile.techcraft.crusher.name=Дробитель
+tile.techcraft.compressor.name=Пресс
+tile.techcraft.alloy_furnace.name=Печь для сплавов
+tile.techcraft.charger.name=Зарядное устройство
 tile.techcraft.battery_box.name=Аккумуляторный блок
+tile.techcraft.battery_box_advanced.name=Улучшенный аккумуляторный блок
+tile.techcraft.battery_box_ultimate.name=Совершенный аккумуляторный блок
+tile.techcraft.fluid_tank.name=Жидкостный бак
 
 item.techcraft.iron_dust.name=Железная пыль
 item.techcraft.gold_dust.name=Золотая пыль
 item.techcraft.circuit.name=Простая схема
 item.techcraft.machine_frame.name=Каркас машины
+item.techcraft.plate_iron.name=Железная пластина
+item.techcraft.plate_gold.name=Золотая пластина
+item.techcraft.plate_copper.name=Медная пластина
+item.techcraft.plate_tin.name=Оловянная пластина
+item.techcraft.plate_lead.name=Свинцовая пластина
+item.techcraft.plate_silver.name=Серебряная пластина
+item.techcraft.plate_bronze.name=Бронзовая пластина
+item.techcraft.plate_steel.name=Стальная пластина
+item.techcraft.battery_basic.name=Батарея
+item.techcraft.battery_advanced.name=Улучшенная батарея
+item.techcraft.battery_ultimate.name=Совершенная батарея
+item.techcraft.electric_drill.name=Электродрель
+item.techcraft.chainsaw.name=Электропила
+item.techcraft.tech_wrench.name=Технический ключ
+item.techcraft.energy_meter.name=Измеритель энергии
 
 gui.techcraft.stored=Запасено энергии:
 gui.techcraft.output_front=Отдаёт энергию лицевой стороной
+gui.techcraft.empty=Пусто
+
+tooltip.techcraft.energy=Энергия: %s / %s FE
+
+msg.techcraft.meter.none=Здесь нет хранилища энергии или жидкости
+msg.techcraft.meter.energy=Энергия: %s / %s FE
+msg.techcraft.meter.face=Сторона %s: %s
+msg.techcraft.meter.mode.in=принимает энергию
+msg.techcraft.meter.mode.out=отдаёт энергию
+msg.techcraft.meter.mode.both=принимает и отдаёт энергию
+msg.techcraft.meter.mode.none=энергия не передаётся
+msg.techcraft.meter.fluid=Жидкость: %s, %s / %s mB
 
 techcraft.config.generator=Угольный генератор
 techcraft.config.electricfurnace=Электропечь
 techcraft.config.crusher=Дробитель
 techcraft.config.batterybox=Аккумуляторный блок
+techcraft.config.batteryboxadvanced=Улучшенный аккумуляторный блок
+techcraft.config.batteryboxultimate=Совершенный аккумуляторный блок
+techcraft.config.compressor=Пресс
+techcraft.config.alloyfurnace=Печь для сплавов
+techcraft.config.charger=Зарядное устройство
+techcraft.config.solar=Солнечные панели
+techcraft.config.windturbine=Ветрогенератор
+techcraft.config.lavagenerator=Лавовый генератор
+techcraft.config.fluidtank=Жидкостный бак
+techcraft.config.equipment=Батареи и инструменты

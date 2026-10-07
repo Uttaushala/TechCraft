@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "active=false,facing=north": {
+      "model": "techcraft:fluid_tank"
+    },
+    "active=true,facing=north": {
+      "model": "techcraft:fluid_tank_on"
+    },
+    "active=false,facing=east": {
+      "model": "techcraft:fluid_tank",
+      "y": 90
+    },
+    "active=true,facing=east": {
+      "model": "techcraft:fluid_tank_on",
+      "y": 90
+    },
+    "active=false,facing=south": {
+      "model": "techcraft:fluid_tank",
+      "y": 180
+    },
+    "active=true,facing=south": {
+      "model": "techcraft:fluid_tank_on",
+      "y": 180
+    },
+    "active=false,facing=west": {
+      "model": "techcraft:fluid_tank",
+      "y": 270
+    },
+    "active=true,facing=west": {
+      "model": "techcraft:fluid_tank_on",
+      "y": 270
+    }
+  }
+}

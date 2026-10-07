@@ -1,7 +1,10 @@
 package com.techcraft;
 
+import com.techcraft.init.ModBlocks;
 import com.techcraft.init.ModItems;
 import com.techcraft.inventory.GuiHandler;
+import com.techcraft.recipe.AlloyRecipes;
+import com.techcraft.recipe.CompressorRecipes;
 import com.techcraft.recipe.CrusherRecipes;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -28,7 +31,7 @@ public class TechCraft {
     public static final CreativeTabs TAB = new CreativeTabs(MODID) {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(ModItems.COAL_GENERATOR);
+            return new ItemStack(ModBlocks.COAL_GENERATOR);
         }
     };
 
@@ -38,6 +41,9 @@ public class TechCraft {
 
         OreDictionary.registerOre("dustIron", ModItems.IRON_DUST);
         OreDictionary.registerOre("dustGold", ModItems.GOLD_DUST);
+        for (int i = 0; i < ModItems.PLATES.length; i++) {
+            OreDictionary.registerOre("plate" + ModItems.PLATE_METALS[i], ModItems.PLATES[i]);
+        }
 
         GameRegistry.addSmelting(ModItems.IRON_DUST, new ItemStack(net.minecraft.init.Items.IRON_INGOT), 0.1F);
         GameRegistry.addSmelting(ModItems.GOLD_DUST, new ItemStack(net.minecraft.init.Items.GOLD_INGOT), 0.1F);
@@ -47,5 +53,7 @@ public class TechCraft {
     public void postInit(FMLPostInitializationEvent event) {
         // Done in postInit so ores and dusts from every other mod in the pack are already registered.
         CrusherRecipes.init();
+        CompressorRecipes.init();
+        AlloyRecipes.init();
     }
 }

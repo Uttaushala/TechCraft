@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "techcraft:blocks/machine_top",
+    "front": "techcraft:blocks/battery_box_ultimate_front",
+    "side": "techcraft:blocks/battery_box_ultimate_side"
+  }
+}
