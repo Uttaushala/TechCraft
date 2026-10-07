@@ -1,0 +1,24 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "I I",
+    "IBI",
+    " C "
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "B": {
+      "item": "techcraft:battery_basic"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    }
+  },
+  "result": {
+    "item": "techcraft:magnet",
+    "count": 1
+  }
+}

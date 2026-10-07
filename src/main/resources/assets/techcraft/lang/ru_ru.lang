@@ -43,6 +43,12 @@ item.techcraft.electric_drill.name=Электродрель
 item.techcraft.chainsaw.name=Электропила
 item.techcraft.upgrade_speed.name=Улучшение скорости
 item.techcraft.upgrade_efficiency.name=Улучшение экономии
+item.techcraft.tech_helmet.name=Технический шлем
+item.techcraft.tech_chestplate.name=Технический нагрудник с ранцем
+item.techcraft.tech_leggings.name=Технические поножи
+item.techcraft.tech_boots.name=Технические ботинки
+item.techcraft.energy_sword.name=Энергомеч
+item.techcraft.magnet.name=Магнит для предметов
 item.techcraft.tech_wrench.name=Технический ключ
 item.techcraft.energy_meter.name=Измеритель энергии
 

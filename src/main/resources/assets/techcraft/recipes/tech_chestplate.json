@@ -1,0 +1,24 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "SBS",
+    "SCS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "B": {
+      "item": "techcraft:battery_advanced"
+    },
+    "C": {
+      "item": "techcraft:circuit"
+    }
+  },
+  "result": {
+    "item": "techcraft:tech_chestplate",
+    "count": 1
+  }
+}

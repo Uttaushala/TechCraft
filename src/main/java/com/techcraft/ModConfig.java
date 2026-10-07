@@ -315,6 +315,34 @@ public class ModConfig {
         @Config.RangeInt(min = 1, max = 100)
         public int drillSpeed = 14;
 
+        @Config.Comment("Energy stored in each piece of Tech Armor")
+        @Config.RangeInt(min = 1000, max = 2000000000)
+        public int armorCapacity = 500000;
+        @Config.RangeInt(min = 1, max = 100000000)
+        public int armorTransfer = 4000;
+        @Config.Comment("FE per tick the jetpack uses while thrusting")
+        @Config.RangeInt(min = 0, max = 100000)
+        public int jetpackEnergyPerTick = 25;
+        @Config.Comment("FE per block of fall the Tech Boots absorb")
+        @Config.RangeInt(min = 0, max = 100000)
+        public int bootsEnergyPerBlock = 30;
+
+        @Config.RangeInt(min = 1000, max = 2000000000)
+        public int swordCapacity = 300000;
+        @Config.RangeInt(min = 0, max = 100000)
+        public int swordEnergyPerHit = 150;
+        @Config.Comment("Attack damage of a charged Energy Sword (an uncharged one does 1)")
+        @Config.RangeInt(min = 1, max = 1000)
+        public int swordDamage = 9;
+
+        @Config.RangeInt(min = 1000, max = 2000000000)
+        public int magnetCapacity = 100000;
+        @Config.RangeInt(min = 1, max = 32)
+        public int magnetRange = 6;
+        @Config.Comment("FE per tick while the magnet is on, plus 1 per attracted item")
+        @Config.RangeInt(min = 0, max = 1000)
+        public int magnetEnergyPerTick = 2;
+
         @Config.Comment("FE per block broken with the Chainsaw")
         @Config.RangeInt(min = 0, max = 100000)
         public int chainsawEnergyPerBlock = 50;

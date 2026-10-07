@@ -504,4 +504,66 @@ for name, col in (("speed", (255, 170, 40)), ("efficiency", (60, 220, 110))):
         im.putpixel((x, 2), (200, 200, 205, 255))
         im.putpixel((x, 13), (200, 200, 205, 255))
     save_item(im, f"upgrade_{name}")
+# ---- armor icons ----
+def armor_icon(kind):
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    body = (150, 158, 170)
+    glow = (80, 220, 255, 255)
+    def fill(x0, y0, x1, y1):
+        for x in range(x0, x1 + 1):
+            for y in range(y0, y1 + 1):
+                im.putpixel((x, y), shade(body, rnd.randint(-6, 6) + (22 if y == y0 else -10 if y == y1 else 0)))
+    if kind == "helmet":
+        fill(3, 3, 12, 6); fill(3, 7, 5, 12); fill(10, 7, 12, 12)
+        rect(im, 6, 8, 9, 9, glow)
+    elif kind == "chestplate":
+        fill(2, 2, 5, 6); fill(10, 2, 13, 6); fill(4, 4, 11, 14)
+        rect(im, 7, 7, 8, 9, glow)
+    elif kind == "leggings":
+        fill(3, 2, 12, 5); fill(3, 6, 6, 14); fill(9, 6, 12, 14)
+        rect(im, 7, 3, 8, 4, glow)
+    else:
+        fill(2, 7, 6, 13); fill(9, 7, 13, 13)
+        rect(im, 3, 9, 5, 9, glow); rect(im, 10, 9, 12, 9, glow)
+    return im
+
+for kind in ("helmet", "chestplate", "leggings", "boots"):
+    save_item(armor_icon(kind), f"tech_{kind}")
+
+# ---- armor on the player model (64x32 layers) ----
+os.makedirs(T + "/models/armor", exist_ok=True)
+for layer in (1, 2):
+    im = Image.new("RGBA", (64, 32), (0, 0, 0, 0))
+    base = (145, 152, 165) if layer == 1 else (125, 132, 146)
+    for x in range(64):
+        for y in range(32):
+            c = shade(base, rnd.randint(-7, 7) + (14 if (x % 8 == 0 or y % 8 == 0) else 0))
+            im.putpixel((x, y), c)
+    for x in range(0, 64, 8):
+        for y in range(0, 32, 8):
+            im.putpixel((x + 3, y + 3), (80, 220, 255, 255))
+            im.putpixel((x + 4, y + 3), (80, 220, 255, 255))
+    im.save(f"{T}/models/armor/tech_layer_{layer}.png")
+
+# ---- energy sword and magnet ----
+sword = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+for i in range(9):
+    sword.putpixel((4 + i, 11 - i), (90, 215, 255, 255))
+    sword.putpixel((5 + i, 11 - i), (210, 245, 255, 255))
+    sword.putpixel((4 + i, 12 - i), (40, 140, 200, 255))
+rect(sword, 2, 11, 5, 12, (90, 94, 104, 255))
+rect(sword, 3, 10, 6, 10, (200, 60, 50, 255))
+sword.putpixel((1, 14), (70, 72, 80, 255)); sword.putpixel((2, 13), (70, 72, 80, 255))
+save_item(sword, "energy_sword")
+
+magnet = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+for y in range(3, 11):
+    rect(magnet, 3, y, 5, y, (210, 50, 45, 255)); rect(magnet, 10, y, 12, y, (60, 110, 225, 255))
+for x in range(3, 13):
+    for y in range(11, 14):
+        if 5 <= x <= 10 and y == 11:
+            continue
+        magnet.putpixel((x, y), (150, 154, 164, 255))
+rect(magnet, 3, 3, 5, 4, (225, 225, 230, 255)); rect(magnet, 10, 3, 12, 4, (225, 225, 230, 255))
+save_item(magnet, "magnet")
 print("textures ok")

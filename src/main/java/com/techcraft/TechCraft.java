@@ -13,7 +13,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import com.techcraft.network.PacketJetpack;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +33,8 @@ public class TechCraft {
     @Mod.Instance(MODID)
     public static TechCraft instance;
 
+    public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+
     public static final CreativeTabs TAB = new CreativeTabs(MODID) {
         @Override
         public ItemStack createIcon() {
@@ -40,6 +45,7 @@ public class TechCraft {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+        NETWORK.registerMessage(PacketJetpack.Handler.class, PacketJetpack.class, 0, Side.SERVER);
         SelfTest.registerTestOres();
 
         OreDictionary.registerOre("dustIron", ModItems.IRON_DUST);

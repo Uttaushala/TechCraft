@@ -57,8 +57,9 @@ for name, (side, top, front, front_on) in machines.items():
 
 plates = ["iron", "gold", "copper", "tin", "lead", "silver", "bronze", "steel"]
 generated = ["iron_dust", "gold_dust", "circuit", "machine_frame"] + [f"plate_{p}" for p in plates] + \
-            ["battery_basic", "battery_advanced", "battery_ultimate", "upgrade_speed", "upgrade_efficiency"]
-handheld = ["electric_drill", "chainsaw", "tech_wrench", "energy_meter"]
+            ["battery_basic", "battery_advanced", "battery_ultimate", "upgrade_speed", "upgrade_efficiency",
+             "tech_helmet", "tech_chestplate", "tech_leggings", "tech_boots", "magnet"]
+handheld = ["electric_drill", "chainsaw", "tech_wrench", "energy_meter", "energy_sword"]
 for item in generated:
     w(f"models/item/{item}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"techcraft:items/{item}"}})
 for item in handheld:
@@ -78,7 +79,7 @@ def item(name, data=None):
 
 T = lambda n: item(f"techcraft:{n}")
 IRON, REDSTONE, GLASS, DIAMOND = ore("ingotIron"), ore("dustRedstone"), ore("blockGlass"), ore("gemDiamond")
-P_IRON, P_GOLD, P_COPPER = ore("plateIron"), ore("plateGold"), ore("plateCopper")
+P_IRON, P_GOLD, P_COPPER, P_STEEL = ore("plateIron"), ore("plateGold"), ore("plateCopper"), ore("plateSteel")
 CIRCUIT, FRAME = T("circuit"), T("machine_frame")
 
 recipes = {
@@ -114,6 +115,12 @@ recipes = {
     "block_breaker": (["IXI", "CMC", "IPI"], {"I": IRON, "X": item("minecraft:iron_pickaxe"), "C": CIRCUIT, "M": FRAME, "P": item("minecraft:piston")}, "block_breaker", 1),
     "block_placer": (["IHI", "CMC", "IDI"], {"I": IRON, "H": item("minecraft:hopper"), "C": CIRCUIT, "M": FRAME, "D": item("minecraft:dispenser")}, "block_placer", 1),
     "mob_grinder": (["ISI", "CMC", "IFI"], {"I": IRON, "S": item("minecraft:iron_sword"), "C": CIRCUIT, "M": FRAME, "F": item("minecraft:flint")}, "mob_grinder", 1),
+    "tech_helmet": (["SSS", "SBS"], {"S": P_STEEL, "B": T("battery_advanced")}, "tech_helmet", 1),
+    "tech_chestplate": (["SBS", "SCS", "SSS"], {"S": P_STEEL, "B": T("battery_advanced"), "C": CIRCUIT}, "tech_chestplate", 1),
+    "tech_leggings": (["SSS", "SBS", "S S"], {"S": P_STEEL, "B": T("battery_advanced")}, "tech_leggings", 1),
+    "tech_boots": (["SBS", "S S"], {"S": P_STEEL, "B": T("battery_advanced")}, "tech_boots", 1),
+    "energy_sword": ([" P ", " P ", "CBC"], {"P": P_STEEL, "C": CIRCUIT, "B": T("battery_advanced")}, "energy_sword", 1),
+    "magnet": (["I I", "IBI", " C "], {"I": IRON, "B": T("battery_basic"), "C": CIRCUIT}, "magnet", 1),
     "tech_wrench": (["I I", "IMI", " I "], {"I": IRON, "M": FRAME}, "tech_wrench", 1),
     "energy_meter": (["R R", "ICI", " I "], {"R": REDSTONE, "I": IRON, "C": CIRCUIT}, "energy_meter", 1),
 }

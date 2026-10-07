@@ -6,9 +6,13 @@ import com.techcraft.item.ItemBase;
 import com.techcraft.item.ItemElectricTool;
 import com.techcraft.item.ItemEnergyBase;
 import com.techcraft.item.ItemEnergyMeter;
+import com.techcraft.item.ItemEnergySword;
+import com.techcraft.item.ItemMagnet;
+import com.techcraft.item.ItemTechArmor;
 import com.techcraft.item.ItemTechWrench;
 import com.techcraft.item.ItemUpgrade;
 import net.minecraft.block.material.Material;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 
@@ -48,6 +52,12 @@ public final class ModItems {
             new HashSet<>(Arrays.asList(Material.WOOD, Material.LEAVES, Material.PLANTS, Material.VINE)));
     public static final Item UPGRADE_SPEED = new ItemUpgrade("upgrade_speed", ItemUpgrade.Type.SPEED);
     public static final Item UPGRADE_EFFICIENCY = new ItemUpgrade("upgrade_efficiency", ItemUpgrade.Type.EFFICIENCY);
+    public static final Item TECH_HELMET = new ItemTechArmor("tech_helmet", EntityEquipmentSlot.HEAD);
+    public static final Item TECH_CHESTPLATE = new ItemTechArmor("tech_chestplate", EntityEquipmentSlot.CHEST);
+    public static final Item TECH_LEGGINGS = new ItemTechArmor("tech_leggings", EntityEquipmentSlot.LEGS);
+    public static final Item TECH_BOOTS = new ItemTechArmor("tech_boots", EntityEquipmentSlot.FEET);
+    public static final Item ENERGY_SWORD = new ItemEnergySword("energy_sword");
+    public static final Item MAGNET = new ItemMagnet("magnet");
     public static final Item TECH_WRENCH = new ItemTechWrench("tech_wrench");
     public static final Item ENERGY_METER = new ItemEnergyMeter("energy_meter");
 
@@ -61,7 +71,8 @@ public final class ModItems {
             all.add(PLATES[i]);
         }
         all.addAll(Arrays.asList(BATTERY_BASIC, BATTERY_ADVANCED, BATTERY_ULTIMATE,
-                ELECTRIC_DRILL, CHAINSAW, TECH_WRENCH, ENERGY_METER, UPGRADE_SPEED, UPGRADE_EFFICIENCY));
+                ELECTRIC_DRILL, CHAINSAW, TECH_WRENCH, ENERGY_METER, UPGRADE_SPEED, UPGRADE_EFFICIENCY,
+                TECH_HELMET, TECH_CHESTPLATE, TECH_LEGGINGS, TECH_BOOTS, ENERGY_SWORD, MAGNET));
         for (BlockMachine block : ModBlocks.MACHINES) {
             ItemBlock item = new ItemBlock(block);
             item.setRegistryName(block.getRegistryName());

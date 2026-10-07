@@ -31,7 +31,7 @@ final class Tests {
             for (String name : Arrays.asList("circuit", "machine_frame", "coal_generator", "electric_furnace", "crusher",
                     "battery_box", "compressor", "alloy_furnace", "charger", "lava_generator", "fluid_tank", "wind_turbine",
                     "solar_panel", "solar_panel_advanced", "solar_panel_ultimate", "battery_box_advanced",
-                    "battery_box_ultimate", "pump", "geothermal_generator", "water_wheel", "biomass_generator", "auto_miner", "block_breaker", "block_placer", "mob_grinder", "upgrade_speed", "upgrade_efficiency", "battery_basic", "battery_advanced", "battery_ultimate", "electric_drill",
+                    "battery_box_ultimate", "tech_helmet", "tech_chestplate", "tech_leggings", "tech_boots", "energy_sword", "magnet", "pump", "geothermal_generator", "water_wheel", "biomass_generator", "auto_miner", "block_breaker", "block_placer", "mob_grinder", "upgrade_speed", "upgrade_efficiency", "battery_basic", "battery_advanced", "battery_ultimate", "electric_drill",
                     "chainsaw", "tech_wrench", "energy_meter")) {
                 SelfTest.recipeExists(missing, name);
             }
@@ -284,6 +284,65 @@ final class Tests {
                     + "; item entities nearby=" + items + "; grinder at " + c.at(0, 0, 0);
         }));
 
+        tests.add(new SelfTest.Test("tech-boots-absorb-fall", c -> { }, c -> {
+            net.minecraftforge.common.util.FakePlayer player =
+                    net.minecraftforge.common.util.FakePlayerFactory.getMinecraft(c.world());
+            ItemStack boots = ((com.techcraft.item.ItemTechArmor) ModItems.TECH_BOOTS).createFull();
+            player.setItemStackToSlot(net.minecraft.inventory.EntityEquipmentSlot.FEET, boots);
+            net.minecraftforge.event.entity.living.LivingFallEvent event =
+                    new net.minecraftforge.event.entity.living.LivingFallEvent(player, 10.0F, 1.0F);
+            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
+            int used = com.techcraft.item.ItemTechArmor.capacity() - com.techcraft.item.EnergyItems.getStored(boots);
+            if (event.getDistance() > 0.01F || used <= 0) {
+                return "fall distance " + event.getDistance() + ", energy used " + used;
+            }
+            ItemStack empty = new ItemStack(ModItems.TECH_BOOTS);
+            player.setItemStackToSlot(net.minecraft.inventory.EntityEquipmentSlot.FEET, empty);
+            net.minecraftforge.event.entity.living.LivingFallEvent second =
+                    new net.minecraftforge.event.entity.living.LivingFallEvent(player, 10.0F, 1.0F);
+            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(second);
+            return second.getDistance() == 10.0F ? null : "unpowered boots changed the fall distance to " + second.getDistance();
+        }));
+
+        tests.add(new SelfTest.Test("jetpack-uses-energy", c -> { }, c -> {
+            net.minecraftforge.common.util.FakePlayer player =
+                    net.minecraftforge.common.util.FakePlayerFactory.getMinecraft(c.world());
+            com.techcraft.item.ItemTechArmor chestplate = (com.techcraft.item.ItemTechArmor) ModItems.TECH_CHESTPLATE;
+            ItemStack stack = chestplate.createFull();
+            player.getEntityData().setBoolean(com.techcraft.item.ItemTechArmor.JETPACK_FLAG, true);
+            player.fallDistance = 12.0F;
+            chestplate.onArmorTick(c.world(), player, stack);
+            int used = com.techcraft.item.ItemTechArmor.capacity() - com.techcraft.item.EnergyItems.getStored(stack);
+            player.getEntityData().setBoolean(com.techcraft.item.ItemTechArmor.JETPACK_FLAG, false);
+            return used > 0 && player.fallDistance == 0.0F ? null : "energy used " + used + ", fall distance " + player.fallDistance;
+        }));
+
+        tests.add(new SelfTest.Test("energy-sword-needs-energy", c -> { }, c -> {
+            net.minecraft.item.Item sword = ModItems.ENERGY_SWORD;
+            double charged = attackDamage(sword.getAttributeModifiers(net.minecraft.inventory.EntityEquipmentSlot.MAINHAND,
+                    ((com.techcraft.item.ItemEnergyBase) sword).createFull()));
+            double empty = attackDamage(sword.getAttributeModifiers(net.minecraft.inventory.EntityEquipmentSlot.MAINHAND,
+                    new ItemStack(sword)));
+            return charged > empty && empty == 0.0 ? null : "damage modifiers were " + charged + " charged, " + empty + " empty";
+        }));
+
+        tests.add(new SelfTest.Test("magnet-pulls-items", c -> { }, c -> {
+            net.minecraftforge.common.util.FakePlayer player =
+                    net.minecraftforge.common.util.FakePlayerFactory.getMinecraft(c.world());
+            BlockPos at = c.at(0, 0, 0);
+            player.setPosition(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+            com.techcraft.item.ItemMagnet magnet = (com.techcraft.item.ItemMagnet) ModItems.MAGNET;
+            ItemStack stack = magnet.createFull();
+            com.techcraft.item.ItemMagnet.setActive(stack, true);
+            net.minecraft.entity.item.EntityItem drop = new net.minecraft.entity.item.EntityItem(
+                    c.world(), at.getX() + 4.5, at.getY(), at.getZ() + 0.5, new ItemStack(Items.APPLE));
+            c.world().spawnEntity(drop);
+            magnet.onUpdate(stack, c.world(), player, 0, false);
+            int used = magnet.getCapacity() - com.techcraft.item.ItemEnergyBase.getStored(stack);
+            drop.setDead();
+            return drop.motionX < -0.1 && used > 0 ? null : "item motion " + drop.motionX + ", energy used " + used;
+        }));
+
         tests.add(new SelfTest.Test("electric-drill-needs-energy", c -> { }, c -> {
             ItemStack empty = new ItemStack(ModItems.ELECTRIC_DRILL);
             ItemStack full = ((com.techcraft.item.ItemEnergyBase) ModItems.ELECTRIC_DRILL).createFull();
@@ -291,6 +350,15 @@ final class Tests {
             int fullLevel = ModItems.ELECTRIC_DRILL.getHarvestLevel(full, "pickaxe", null, null);
             return emptyLevel < 0 && fullLevel == 3 ? null : "harvest levels were " + emptyLevel + " / " + fullLevel;
         }));
+    }
+
+    private static double attackDamage(com.google.common.collect.Multimap<String, net.minecraft.entity.ai.attributes.AttributeModifier> modifiers) {
+        double total = 0.0;
+        for (net.minecraft.entity.ai.attributes.AttributeModifier modifier : modifiers.get(
+                net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE.getName())) {
+            total += modifier.getAmount();
+        }
+        return total;
     }
 
     private Tests() {

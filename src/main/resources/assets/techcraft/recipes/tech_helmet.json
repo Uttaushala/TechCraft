@@ -1,0 +1,20 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "SSS",
+    "SBS"
+  ],
+  "key": {
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "B": {
+      "item": "techcraft:battery_advanced"
+    }
+  },
+  "result": {
+    "item": "techcraft:tech_helmet",
+    "count": 1
+  }
+}

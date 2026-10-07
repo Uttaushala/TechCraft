@@ -43,6 +43,12 @@ item.techcraft.electric_drill.name=Electric Drill
 item.techcraft.chainsaw.name=Chainsaw
 item.techcraft.upgrade_speed.name=Speed Upgrade
 item.techcraft.upgrade_efficiency.name=Efficiency Upgrade
+item.techcraft.tech_helmet.name=Tech Helmet
+item.techcraft.tech_chestplate.name=Tech Jetpack Chestplate
+item.techcraft.tech_leggings.name=Tech Leggings
+item.techcraft.tech_boots.name=Tech Boots
+item.techcraft.energy_sword.name=Energy Sword
+item.techcraft.magnet.name=Item Magnet
 item.techcraft.tech_wrench.name=Tech Wrench
 item.techcraft.energy_meter.name=Energy Meter
 
