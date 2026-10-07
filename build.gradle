@@ -77,4 +77,5 @@ tasks.matching { it.name == "sourceMainJava" }.all { it.dependsOn fetchMekanismA
 
 jar {
     exclude "mekanism/api/**"
+    includeEmptyDirs = false
 }

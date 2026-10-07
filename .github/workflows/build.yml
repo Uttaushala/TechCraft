@@ -42,7 +42,7 @@ jobs:
           JAR=$(ls build/libs/techcraft-*.jar | grep -v -- -sources)
           echo "$JAR"
           unzip -l "$JAR" | awk '{print $4}' | grep -E '\.class$' | sed -E 's#/[^/]*$##' | sort | uniq -c
-          if unzip -l "$JAR" | awk '{print $4}' | grep -E '^(mekanism|ic2|mezz)/'; then
+          if unzip -l "$JAR" | awk '{print $4}' | grep -E '^(mekanism|ic2|mezz)/.*\.class$'; then
             echo "Foreign classes found in the mod jar"; exit 1
           fi
 
