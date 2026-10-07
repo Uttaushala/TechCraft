@@ -23,6 +23,8 @@ import java.util.List;
 
 /** The actual scenarios; see {@link SelfTest}. */
 final class Tests {
+    private static net.minecraft.entity.EntityLiving testCow;
+
     static void register(List<SelfTest.Test> tests) {
         tests.add(new SelfTest.Test("recipes-loaded", c -> { }, c -> {
             List<String> missing = new ArrayList<>();
@@ -263,6 +265,7 @@ final class Tests {
             c.machine(ModBlocks.MOB_GRINDER, EnumFacing.EAST, 0, 0, 0);
             c.energy(0, 0, 0).receiveEnergy(50000, false);
             net.minecraft.entity.passive.EntityCow cow = new net.minecraft.entity.passive.EntityCow(c.world());
+            testCow = cow;
             BlockPos at = c.at(3, 0, 0);
             cow.setNoAI(true);
             cow.setPosition(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
@@ -274,7 +277,11 @@ final class Tests {
                     return null;
                 }
             }
-            return "grinder collected no drops";
+            net.minecraft.util.math.AxisAlignedBB wide = new net.minecraft.util.math.AxisAlignedBB(c.at(-10, -5, -10), c.at(15, 10, 10));
+            int items = c.world().getEntitiesWithinAABB(net.minecraft.entity.item.EntityItem.class, wide).size();
+            return "grinder collected no drops; cow dead=" + testCow.isDead + " health=" + testCow.getHealth()
+                    + " pos=" + testCow.getPosition() + "; grinder energy=" + c.energy(0, 0, 0).getEnergyStored()
+                    + "; item entities nearby=" + items + "; grinder at " + c.at(0, 0, 0);
         }));
 
         tests.add(new SelfTest.Test("electric-drill-needs-energy", c -> { }, c -> {
