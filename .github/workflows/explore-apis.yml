@@ -1,6 +1,6 @@
 name: Explore third-party APIs
 
-# Temporary: finds the Mekanism 1.12.2 API on modmaven.dev so the gas integration can be written against it.
+# Temporary: checks whether the Mekanism 1.12 API sources can be fetched from GitHub.
 on:
   push:
     branches: [claude/minecraft-mod-mro3ht]
@@ -11,27 +11,13 @@ jobs:
   explore:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "8"
-
-      - name: Mekanism 1.12.2 on modmaven
+      - name: Mekanism branches and API sources
         continue-on-error: true
         run: |
-          curl -s https://modmaven.dev/mekanism/Mekanism/maven-metadata.xml | grep -o '<version>1\.12[^<]*' | tr '\n' ' '
-          echo
-          V=$(curl -s https://modmaven.dev/mekanism/Mekanism/maven-metadata.xml | grep -o '<version>1\.12\.2-9\.8[^<]*' | sed 's/<version>//' | tail -1)
-          echo "chosen version: $V"
-          curl -s "https://modmaven.dev/mekanism/Mekanism/$V/" | grep -oE 'href="[^"]*"'
-          mkdir -p /tmp/api && cd /tmp/api
-          for f in "Mekanism-$V-api.jar" "Mekanism-$V.jar"; do
-            code=$(curl -s -o "$f" -w '%{http_code}' -L "https://modmaven.dev/mekanism/Mekanism/$V/$f")
-            echo "$f -> $code ($(stat -c %s "$f" 2>/dev/null) bytes)"
-          done
-          J="Mekanism-$V-api.jar"
-          [ -s "$J" ] && file "$J" | head -1
-          unzip -l "$J" 2>/dev/null | grep -E "mekanism/api/gas/|Capabilit" | head -50
-          for c in mekanism.api.gas.IGasHandler mekanism.api.gas.GasStack mekanism.api.gas.Gas mekanism.api.gas.GasTank mekanism.api.gas.GasRegistry mekanism.api.gas.GasTankInfo mekanism.api.gas.ITubeConnection; do
-            javap -cp "$J" "$c" 2>&1 | head -45
+          curl -s "https://api.github.com/repos/mekanism/Mekanism/branches?per_page=100" | grep '"name"' | head -30
+          curl -s "https://api.github.com/repos/mekanism/Mekanism/tags?per_page=100" | grep '"name"' | grep -E "1\.12|9\.8" | head -20
+          for ref in 1.12.x 1.12 v1.12.2-9.8.3.390 1.12.2-9.8.3.390; do
+            code=$(curl -s -o /tmp/IGasHandler.java -w '%{http_code}' "https://raw.githubusercontent.com/mekanism/Mekanism/$ref/src/main/java/mekanism/api/gas/IGasHandler.java")
+            echo "$ref -> $code"
+            [ "$code" = 200 ] && { cat /tmp/IGasHandler.java; break; }
           done
