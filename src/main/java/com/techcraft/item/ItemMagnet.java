@@ -63,7 +63,7 @@ public class ItemMagnet extends ItemEnergyBase {
                 continue;
             }
             Vec3d pull = new Vec3d(holder.posX - item.posX, holder.posY + 0.5 - item.posY, holder.posZ - item.posZ);
-            if (pull.lengthVector() < 0.8 || !useEnergy(stack, 1)) {
+            if (pull.length() < 0.8 || !useEnergy(stack, 1)) {
                 continue;
             }
             Vec3d motion = pull.normalize().scale(0.4);
