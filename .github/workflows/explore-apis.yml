@@ -1,0 +1,75 @@
+name: Explore third-party APIs
+
+# Temporary: prints what the JEI, Mekanism and IC2 API jars really contain so the integrations can be written against them.
+on:
+  push:
+    branches: [claude/minecraft-mod-mro3ht]
+    paths: [.github/workflows/explore-apis.yml]
+  workflow_dispatch:
+
+jobs:
+  explore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "8"
+
+      - name: Probe maven repositories
+        run: |
+          for u in \
+            https://dvs1.progwml6.com/files/maven/mezz/jei/jei_1.12.2/ \
+            https://modmaven.dev/mezz/jei/jei_1.12.2/ \
+            https://maven.blamejared.com/mezz/jei/jei_1.12.2/ \
+            https://modmaven.dev/mekanism/Mekanism/ \
+            https://modmaven.k-4u.nl/mekanism/Mekanism/ \
+            https://maven.blamejared.com/mekanism/ \
+            https://maven.ic2.player.to/net/industrial-craft/industrialcraft-2/ \
+            https://modmaven.dev/net/industrial-craft/industrialcraft-2/ ; do
+            echo "== $u -> $(curl -s -o /tmp/idx.html -w '%{http_code}' -L "$u")"
+            grep -oE 'href="[^"]*"' /tmp/idx.html | head -40 || true
+          done
+
+      - name: JEI API
+        continue-on-error: true
+        run: |
+          mkdir -p /tmp/api && cd /tmp/api
+          for base in https://dvs1.progwml6.com/files/maven https://modmaven.dev; do
+            if curl -sfL -o jei-api.jar "$base/mezz/jei/jei_1.12.2/4.16.1.302/jei_1.12.2-4.16.1.302-api.jar"; then echo "got JEI from $base"; break; fi
+          done
+          ls -la jei-api.jar
+          unzip -l jei-api.jar | grep -E "IModPlugin|IRecipeCategory|IRecipeWrapper|IRecipeLayout|IModRegistry|IGuiHelper|JEIPlugin|IJeiHelpers|IRecipeCategoryRegistration|BlankRecipe|IDrawable|IRecipeWrapperFactory|IGuiItemStackGroup"
+          for c in mezz.jei.api.IModPlugin mezz.jei.api.recipe.IRecipeCategory mezz.jei.api.recipe.IRecipeWrapper mezz.jei.api.IModRegistry mezz.jei.api.IGuiHelper mezz.jei.api.gui.IGuiItemStackGroup mezz.jei.api.recipe.BlankRecipeCategory mezz.jei.api.recipe.BlankRecipeWrapper; do
+            javap -cp jei-api.jar "$c" 2>&1 | head -40
+          done
+
+      - name: Mekanism API
+        continue-on-error: true
+        run: |
+          cd /tmp/api
+          for url in \
+            https://modmaven.dev/mekanism/Mekanism/1.12.2-9.8.3.390/Mekanism-1.12.2-9.8.3.390-api.jar \
+            https://modmaven.k-4u.nl/mekanism/Mekanism/1.12.2-9.8.3.390/Mekanism-1.12.2-9.8.3.390-api.jar; do
+            if curl -sfL -o mek-api.jar "$url"; then echo "got Mekanism from $url"; break; fi
+          done
+          ls -la mek-api.jar
+          unzip -l mek-api.jar | grep -E "mekanism/api/gas/|Capabilit" | head -60
+          for c in mekanism.api.gas.IGasHandler mekanism.api.gas.GasStack mekanism.api.gas.Gas mekanism.api.gas.GasTank mekanism.api.gas.GasRegistry mekanism.api.gas.GasTankInfo mekanism.api.gas.IGasItem; do
+            javap -cp mek-api.jar "$c" 2>&1 | head -50
+          done
+
+      - name: IC2 API
+        continue-on-error: true
+        run: |
+          cd /tmp/api
+          for url in \
+            https://maven.ic2.player.to/net/industrial-craft/industrialcraft-2/2.8.222-ex112/industrialcraft-2-2.8.222-ex112-api.jar \
+            https://modmaven.dev/net/industrial-craft/industrialcraft-2/2.8.222-ex112/industrialcraft-2-2.8.222-ex112-api.jar; do
+            if curl -sfL -o ic2-api.jar "$url"; then echo "got IC2 from $url"; break; fi
+          done
+          ls -la ic2-api.jar
+          unzip -l ic2-api.jar | grep -E "ic2/api/energy" | head -40
+          for c in ic2.api.energy.tile.IEnergySink ic2.api.energy.tile.IEnergySource ic2.api.energy.tile.IEnergyTile ic2.api.energy.tile.IEnergyEmitter ic2.api.energy.tile.IEnergyAcceptor ic2.api.energy.event.EnergyTileLoadEvent ic2.api.energy.event.EnergyTileUnLoadEvent ic2.api.energy.EnergyNet; do
+            javap -cp ic2-api.jar "$c" 2>&1 | head -30
+          done
