@@ -1,41 +1,39 @@
-plugins {
-    id "java"
-    id "com.gtnewhorizons.retrofuturagradle" version "1.4.1"
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url = "https://maven.minecraftforge.net/" }
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+    }
 }
+apply plugin: "net.minecraftforge.gradle.forge"
 
 version = "1.0.0"
 group = "com.techcraft"
+archivesBaseName = "techcraft-1.12.2"
 
-base {
-    archivesName = "techcraft-1.12.2"
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
+sourceCompatibility = targetCompatibility = "1.8"
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.8"
     options.encoding = "UTF-8"
 }
 
 minecraft {
-    mcVersion = "1.12.2"
-    mcpMappingChannel = "stable"
-    mcpMappingVersion = "39"
-    username = "Developer"
-}
-
-repositories {
-    maven { url = "https://maven.cleanroommc.com" }
-    maven { url = "https://maven.minecraftforge.net/" }
-    mavenCentral()
+    version = "1.12.2-14.23.5.2847"
+    runDir = "run"
+    mappings = "stable_39"
 }
 
 processResources {
     inputs.property "version", project.version
-    filesMatching("mcmod.info") {
-        expand "version": project.version, "mcversion": "1.12.2"
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "mcmod.info"
+        expand "version": project.version, "mcversion": project.minecraft.version
+    }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
     }
 }
